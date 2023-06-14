@@ -144,6 +144,8 @@ namespace SafetyBarriers.ViewModels
         {
             RevitModel = revitModel;
 
+            GenericModelFamilySymbols = RevitModel.GetPostFamilySymbolNames();
+
             #region Команды
             GetBarrierAxisCommand = new LambdaCommand(OnGetBarrierAxisCommandExecuted, CanGetBarrierAxisCommandExecute);
 

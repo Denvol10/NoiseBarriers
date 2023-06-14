@@ -94,7 +94,8 @@
                     <TextBox Style="{StaticResource SelectedItemsBox}"
                              Text="{Binding BoundCurve1, Mode=OneWay}" />
                 </UniformGrid>
-                <UniformGrid Columns="2" Margin="0,5,0,0">
+                <UniformGrid Columns="2"
+                             Margin="0,5,0,0">
                     <UniformGrid Rows="2">
                         <TextBlock Text="Линия границы 2"
                                    Style="{StaticResource TextAboveButton}" />
@@ -102,7 +103,20 @@
                                 Command="{Binding GetBoundCurve2Command}" />
                     </UniformGrid>
                     <TextBox Style="{StaticResource SelectedItemsBox}"
-                             Text="{Binding BoundCurve2}" />
+                             Text="{Binding BoundCurve2, Mode=OneWay}" />
+                </UniformGrid>
+            </UniformGrid>
+        </GroupBox>
+        <GroupBox Header="Стойки барьерного ограждения"
+                  Style="{StaticResource BorderGroupStyle}">
+            <UniformGrid Columns="2">
+                <UniformGrid Rows="2">
+                    <TextBlock Text="Стойка"
+                               Style="{StaticResource TextAboveButton}" />
+                    <ComboBox Width="150"
+                              Margin="0,2,0,0"
+                              ItemsSource="{Binding GenericModelFamilySymbols}"
+                              SelectedItem="{Binding PostFamilySymbol}" />
                 </UniformGrid>
             </UniformGrid>
         </GroupBox>

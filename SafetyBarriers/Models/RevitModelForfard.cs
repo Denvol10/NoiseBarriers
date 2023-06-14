@@ -78,5 +78,13 @@ namespace SafetyBarriers
             BoundCurve2 = RevitGeometryUtils.GetBoundCurve(Uiapp, out _boundCurveId2);
         }
         #endregion
+
+        #region Получение названиий семейств для стоек барьерного ограждения
+        public ObservableCollection<string> GetPostFamilySymbolNames()
+        {
+            var familySymbols = RevitFamilyUtils.GetFamilySymbolNames(Doc, BuiltInCategory.OST_GenericModel);
+            return familySymbols;
+        }
+        #endregion
     }
 }
