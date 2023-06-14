@@ -37,6 +37,15 @@ namespace SafetyBarriers.ViewModels
 
         #endregion
 
+        #region Элементы оси барьерного ограждения
+        private string _barrierAxisElemIds;
+        public string BarrierAxisElemIds
+        {
+            get => _barrierAxisElemIds;
+            set => Set(ref _barrierAxisElemIds, value);
+        }
+        #endregion
+
         #region Список семейств категории обобщенной модели
         private ObservableCollection<string> _genericModelFamilySymbols;
 
@@ -58,7 +67,22 @@ namespace SafetyBarriers.ViewModels
 
         #region Команды
 
+        #region Получение оси барьерного ограждения
+        public ICommand GetBarrierAxisCommand { get; }
 
+        private void OnGetBarrierAxisCommandExecuted(object parameter)
+        {
+            RevitCommand.mainView.Hide();
+            RevitModel.GetBarrierAxis();
+            BarrierAxisElemIds = RevitModel.BarrierAxisElemIds;
+            RevitCommand.mainView.ShowDialog();
+        }
+
+        private bool CanGetBarrierAxisCommandExecute(object parameter)
+        {
+            return true;
+        }
+        #endregion
 
 
         #endregion
@@ -69,7 +93,7 @@ namespace SafetyBarriers.ViewModels
         {
             RevitModel = revitModel;
             #region
-
+            GetBarrierAxisCommand = new LambdaCommand(OnGetBarrierAxisCommandExecuted, CanGetBarrierAxisCommandExecute);
 
             #endregion
         }
