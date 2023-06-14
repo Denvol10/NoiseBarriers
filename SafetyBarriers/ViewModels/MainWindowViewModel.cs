@@ -37,7 +37,7 @@ namespace SafetyBarriers.ViewModels
 
         #endregion
 
-        #region Список комнат
+        #region Список семейств стоек барьерного ограждения
 
         private ObservableCollection<string> _rooms;
 
