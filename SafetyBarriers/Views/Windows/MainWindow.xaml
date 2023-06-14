@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="{Binding Title}"
         Height="450"
-        Width="400"
+        Width="350"
         Background="#f0f0f0"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
@@ -72,13 +72,38 @@
                   Style="{StaticResource BorderGroupStyle}">
             <UniformGrid Columns="2">
                 <UniformGrid Rows="2">
-                    <TextBlock Text="Линии барьерного ограждения"
+                    <TextBlock Text="Линии оси ограждения"
                                Style="{StaticResource TextAboveButton}" />
                     <Button Style="{StaticResource SelectButton}"
                             Command="{Binding GetBarrierAxisCommand}" />
                 </UniformGrid>
                 <TextBox Text="{Binding BarrierAxisElemIds, Mode=OneWay}"
                          Style="{StaticResource SelectedItemsBox}" />
+            </UniformGrid>
+        </GroupBox>
+        <GroupBox Header="Границы барьерного ограждения"
+                  Style="{StaticResource BorderGroupStyle}">
+            <UniformGrid Rows="2">
+                <UniformGrid Columns="2">
+                    <UniformGrid Rows="2">
+                        <TextBlock Text="Линия границы 1"
+                                   Style="{StaticResource TextAboveButton}" />
+                        <Button Style="{StaticResource SelectButton}"
+                                Command="{Binding GetBoundCurve1Command}" />
+                    </UniformGrid>
+                    <TextBox Style="{StaticResource SelectedItemsBox}"
+                             Text="{Binding BoundCurve1, Mode=OneWay}" />
+                </UniformGrid>
+                <UniformGrid Columns="2" Margin="0,5,0,0">
+                    <UniformGrid Rows="2">
+                        <TextBlock Text="Линия границы 2"
+                                   Style="{StaticResource TextAboveButton}" />
+                        <Button Style="{StaticResource SelectButton}"
+                                Command="{Binding GetBoundCurve2Command}" />
+                    </UniformGrid>
+                    <TextBox Style="{StaticResource SelectedItemsBox}"
+                             Text="{Binding BoundCurve2}" />
+                </UniformGrid>
             </UniformGrid>
         </GroupBox>
     </StackPanel>

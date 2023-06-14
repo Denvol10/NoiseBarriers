@@ -23,6 +23,19 @@ namespace SafetyBarriers.Models
             return curvesBarrierAxis;
         }
 
+        // Получение линии границы
+        public static Curve GetBoundCurve(UIApplication uiapp, out string elementIds)
+        {
+            Selection sel = uiapp.ActiveUIDocument.Selection;
+            var boundCurvePicked = sel.PickObject(ObjectType.Element, "Выберете линию границу барьерного ограждения");
+            Options options = new Options();
+            Element curveElement = uiapp.ActiveUIDocument.Document.GetElement(boundCurvePicked);
+            elementIds = "Id" + curveElement.Id.IntegerValue;
+            var boundCurve = curveElement.get_Geometry(options).First() as Curve;
+
+            return boundCurve;
+        }
+
 
         // Метод получения строки с ElementId
         private static string ElementIdToString(IEnumerable<Element> elements)

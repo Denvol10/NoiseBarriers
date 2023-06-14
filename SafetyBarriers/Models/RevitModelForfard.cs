@@ -46,5 +46,37 @@ namespace SafetyBarriers
             BarrierAxis = new PolyCurve(curves);
         }
         #endregion
+
+        #region Граница барьерного ограждения 1
+        public Curve BoundCurve1 { get; set; }
+
+        private string _boundCurveId1;
+        public string BoundCurveId1
+        {
+            get => _boundCurveId1;
+            set => _boundCurveId1 = value;
+        }
+
+        public void GetBoundCurve1()
+        {
+            BoundCurve1 = RevitGeometryUtils.GetBoundCurve(Uiapp, out _boundCurveId1);
+        }
+        #endregion
+
+        #region Граница барьерного ограждения 2
+        public Curve BoundCurve2 { get; set; }
+
+        private string _boundCurveId2;
+        public string BoundCurveId2
+        {
+            get => _boundCurveId2;
+            set => _boundCurveId2 = value;
+        }
+
+        public void GetBoundCurve2()
+        {
+            BoundCurve2 = RevitGeometryUtils.GetBoundCurve(Uiapp, out _boundCurveId2);
+        }
+        #endregion
     }
 }

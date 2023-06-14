@@ -46,6 +46,24 @@ namespace SafetyBarriers.ViewModels
         }
         #endregion
 
+        #region Элемент линии границы 1
+        private string _boundCurve1;
+        public string BoundCurve1
+        {
+            get => _boundCurve1;
+            set => Set(ref _boundCurve1, value);
+        }
+        #endregion
+
+        #region Элемент линии границы 2
+        private string _boundCurve2;
+        public string BoundCurve2
+        {
+            get => _boundCurve2;
+            set => Set(ref _boundCurve2, value);
+        }
+        #endregion
+
         #region Список семейств категории обобщенной модели
         private ObservableCollection<string> _genericModelFamilySymbols;
 
@@ -84,6 +102,39 @@ namespace SafetyBarriers.ViewModels
         }
         #endregion
 
+        #region Получение границы барьерного ограждения 1
+        public ICommand GetBoundCurve1Command { get; }
+
+        private void OnGetBoundCurve1CommandExecuted(object parameter)
+        {
+            RevitCommand.mainView.Hide();
+            RevitModel.GetBoundCurve1();
+            BoundCurve1 = RevitModel.BoundCurveId1;
+            RevitCommand.mainView.ShowDialog();
+        }
+
+        private bool CanGetBoundCurve1CommandExecute(object parameter)
+        {
+            return true;
+        }
+        #endregion
+
+        #region Получение границы плиты барьерного ограждения 2
+        public ICommand GetBoundCurve2Command { get; }
+
+        private void OnGetBoundCurve2CommandExecuted(object parameter)
+        {
+            RevitCommand.mainView.Hide();
+            RevitModel.GetBoundCurve2();
+            BoundCurve2 = RevitModel.BoundCurveId2;
+            RevitCommand.mainView.ShowDialog();
+        }
+
+        private bool CanGetBoundCurve2CommandExecute(object parameter)
+        {
+            return true;
+        }
+        #endregion
 
         #endregion
 
@@ -92,9 +143,13 @@ namespace SafetyBarriers.ViewModels
         public MainWindowViewModel(RevitModelForfard revitModel)
         {
             RevitModel = revitModel;
-            #region
+
+            #region Команды
             GetBarrierAxisCommand = new LambdaCommand(OnGetBarrierAxisCommandExecuted, CanGetBarrierAxisCommandExecute);
 
+            GetBoundCurve1Command = new LambdaCommand(OnGetBoundCurve1CommandExecuted, CanGetBoundCurve1CommandExecute);
+
+            GetBoundCurve2Command = new LambdaCommand(OnGetBoundCurve2CommandExecuted, CanGetBoundCurve2CommandExecute);
             #endregion
         }
 
