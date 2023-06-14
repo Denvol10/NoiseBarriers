@@ -28,14 +28,6 @@ namespace SafetyBarriers
             _doc = uiapp.ActiveUIDocument.Document;
         }
 
-        public List<string> GetAllRooms()
-        {
-            var rooms = new FilteredElementCollector(_doc).OfCategory(BuiltInCategory.OST_Rooms)
-                                                          .Cast<Room>()
-                                                          .Select(r => r.Name)
-                                                          .ToList();
 
-            return rooms;
-        }
     }
 }

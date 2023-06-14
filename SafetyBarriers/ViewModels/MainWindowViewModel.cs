@@ -37,35 +37,29 @@ namespace SafetyBarriers.ViewModels
 
         #endregion
 
-        #region Список семейств стоек барьерного ограждения
+        #region Список семейств категории обобщенной модели
+        private ObservableCollection<string> _genericModelFamilySymbols;
 
-        private ObservableCollection<string> _rooms;
-
-        public ObservableCollection<string> Rooms
+        public ObservableCollection<string> GenericModelFamilySymbols
         {
-            get => _rooms;
-            set => Set(ref _rooms, value);
+            get => _genericModelFamilySymbols;
+            set => Set(ref _genericModelFamilySymbols, value);
         }
+        #endregion
 
+        #region Выбранный типоразмер семейства стойки
+        private string _postFamilySymbol;
+        public string PostFamilySymbol
+        {
+            get => _postFamilySymbol;
+            set => Set(ref _postFamilySymbol, value);
+        }
         #endregion
 
         #region Команды
 
-        #region Команда получение всех комнат
 
-        public ICommand GetRoomsCommand { get; }
 
-        private void OnGetRoomsCommandExecuted(object parameter)
-        {
-            Rooms = new ObservableCollection<string>(RevitModel.GetAllRooms());
-        }
-
-        private bool CanGetRoomsCommandExecute(object parameter)
-        {
-            return true;
-        }
-
-        #endregion
 
         #endregion
 
@@ -76,7 +70,6 @@ namespace SafetyBarriers.ViewModels
             RevitModel = revitModel;
             #region
 
-            GetRoomsCommand = new LambdaCommand(OnGetRoomsCommandExecuted, CanGetRoomsCommandExecute);
 
             #endregion
         }
