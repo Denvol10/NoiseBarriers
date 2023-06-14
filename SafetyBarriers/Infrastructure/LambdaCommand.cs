@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RevitWPFTemplate.Infrastructure.Base;
+using SafetyBarriers.Infrastructure.Base;
 
-namespace RevitWPFTemplate.Infrastructure
+namespace SafetyBarriers.Infrastructure
 {
     internal class LambdaCommand : Command
     {

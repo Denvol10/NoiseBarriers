@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace RevitWPFTemplate.Infrastructure.Base
+namespace SafetyBarriers.Infrastructure.Base
 {
     internal abstract class Command : ICommand
     {
