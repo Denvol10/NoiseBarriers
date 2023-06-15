@@ -136,6 +136,20 @@ namespace SafetyBarriers.ViewModels
         }
         #endregion
 
+        #region Создание барьерного ограждения
+        public ICommand CreateSafetyBarrierCommand { get; }
+
+        private void OnCreateSafetyBarrierCommandExecuted(object parameter)
+        {
+            RevitModel.CreatePostFamilyInstances(PostFamilySymbol);
+        }
+
+        public bool CanCreateSafetyBarrierCommandExecute(object parameter)
+        {
+            return true;
+        }
+        #endregion
+
         #endregion
 
 
@@ -152,6 +166,8 @@ namespace SafetyBarriers.ViewModels
             GetBoundCurve1Command = new LambdaCommand(OnGetBoundCurve1CommandExecuted, CanGetBoundCurve1CommandExecute);
 
             GetBoundCurve2Command = new LambdaCommand(OnGetBoundCurve2CommandExecuted, CanGetBoundCurve2CommandExecute);
+
+            CreateSafetyBarrierCommand = new LambdaCommand(OnCreateSafetyBarrierCommandExecuted, CanCreateSafetyBarrierCommandExecute);
             #endregion
         }
 

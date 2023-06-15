@@ -12,6 +12,7 @@ using Autodesk.Revit.DB.Architecture;
 using System.Collections.ObjectModel;
 using BridgeDeck.Models;
 using SafetyBarriers.Models;
+using System.IO;
 
 namespace SafetyBarriers
 {
@@ -31,7 +32,7 @@ namespace SafetyBarriers
         }
 
         #region Ось барьерного ограждения
-        public PolyCurve BarrierAxis { get; set; }
+        public ParametricPolyLine BarrierAxis { get; set; }
 
         private string _barrierAxisElemIds;
         public string BarrierAxisElemIds
@@ -42,8 +43,8 @@ namespace SafetyBarriers
 
         public void GetBarrierAxis()
         {
-            var curves = RevitGeometryUtils.GetBarrierAxisCurves(Uiapp, out _barrierAxisElemIds);
-            BarrierAxis = new PolyCurve(curves);
+            var curves = RevitGeometryUtils.GetBarrierAxisCurves(Uiapp, out _barrierAxisElemIds).OfType<Line>();
+            BarrierAxis = new ParametricPolyLine(curves);
         }
         #endregion
 
@@ -84,6 +85,107 @@ namespace SafetyBarriers
         {
             var familySymbols = RevitFamilyUtils.GetFamilySymbolNames(Doc, BuiltInCategory.OST_GenericModel);
             return familySymbols;
+        }
+        #endregion
+
+        #region Тест создание стоек барьерного ограждения
+        public void CreatePostFamilyInstances(string familyAndSymbolName)
+        {
+            double boundParameter1;
+            BarrierAxis.Intersect(BoundCurve1, out boundParameter1);
+
+            double boundParameter2;
+            BarrierAxis.Intersect(BoundCurve2, out boundParameter2);
+
+            FamilySymbol fSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, familyAndSymbolName);
+
+            var pointParameters = GenerateParameters(boundParameter1, boundParameter2);
+
+            var postTransform = new List<(Transform, double)>();
+
+            string resultPath = @"O:\Revit Infrastructure Tools\SafetyBarriers\SafetyBarriers\TextFile1.txt";
+            using (StreamWriter sw = new StreamWriter(resultPath, false, Encoding.Default))
+            {
+                foreach (double parameter in pointParameters)
+                {
+                    Line targetLine;
+                    XYZ point = BarrierAxis.GetPointOnPolyLine(parameter, out targetLine);
+                    Transform transform = Transform.CreateTranslation(point);
+
+                    XYZ lineVector = targetLine.GetEndPoint(0) - targetLine.GetEndPoint(1);
+
+                    double angle = UnitUtils.ConvertToInternalUnits(90, UnitTypeId.Degrees);
+                    double rotationAngle = lineVector.AngleTo(XYZ.BasisY);
+                    if (rotationAngle >= Math.PI / 2 && rotationAngle <= Math.PI && lineVector.X > 0)
+                    {
+                        rotationAngle = -(rotationAngle - Math.PI / 2);
+                    }
+                    else if (rotationAngle >= 0 && rotationAngle <= Math.PI / 2 && lineVector.X > 0)
+                    {
+                        rotationAngle = Math.PI / 2 - rotationAngle;
+                    }
+                    else if(rotationAngle >= 0 && rotationAngle <= Math.PI / 2 && lineVector.X < 0)
+                    {
+                        rotationAngle = Math.PI / 2 + rotationAngle;
+                    }
+                    else if(rotationAngle >= Math.PI / 2 && rotationAngle <= Math.PI && lineVector.X < 0)
+                    {
+                        rotationAngle = rotationAngle + Math.PI / 2;
+                    }
+                    else if(lineVector.X == 0)
+                    {
+                        rotationAngle = rotationAngle + Math.PI / 2;
+                    }
+
+                    sw.WriteLine($"{UnitUtils.ConvertFromInternalUnits(rotationAngle, UnitTypeId.Degrees)} | {lineVector}");
+
+                    postTransform.Add((transform, rotationAngle));
+                }
+            }
+
+
+
+            using (Transaction trans = new Transaction(Doc, "Create Posts"))
+            {
+                trans.Start();
+                if (!fSymbol.IsActive)
+                {
+                    fSymbol.Activate();
+                }
+                foreach (var transform in postTransform)
+                {
+                    FamilyInstance familyInstance = Doc.Create.NewFamilyInstance(transform.Item1.Origin, fSymbol, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+
+                    familyInstance.Location.Rotate(Line.CreateUnbound(transform.Item1.Origin, XYZ.BasisZ), transform.Item2);
+                }
+
+                trans.Commit();
+            }
+        }
+        #endregion
+
+        #region Генератор параметров на поликривой
+        private List<double> GenerateParameters(double bound1, double bound2)
+        {
+            var parameters = new List<double>
+            { bound1 };
+
+            double approxStep = UnitUtils.ConvertToInternalUnits(2, UnitTypeId.Meters);
+
+            int count = (int)(Math.Abs(bound2 - bound1) / approxStep + 1);
+
+            double start = bound1;
+
+            double step = (bound2 - bound1) / (count - 1);
+            for (int i = 0; i < count - 2; i++)
+            {
+                parameters.Add(start + step);
+                start += step;
+            }
+
+            parameters.Add(bound2);
+
+            return parameters;
         }
         #endregion
     }

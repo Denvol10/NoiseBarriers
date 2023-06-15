@@ -71,9 +71,9 @@ namespace SafetyBarriers.Models
         }
 
         // Метод получения списка линий на основе полилинии
-        private static IEnumerable<Curve> GetCurvesByPolyline(PolyLine polyLine)
+        private static List<Line> GetCurvesByPolyline(PolyLine polyLine)
         {
-            var curves = new List<Curve>();
+            var curves = new List<Line>();
 
             for (int i = 0; i < polyLine.NumberOfCoordinates - 1; i++)
             {

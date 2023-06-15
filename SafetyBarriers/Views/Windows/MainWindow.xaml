@@ -118,6 +118,11 @@
                               ItemsSource="{Binding GenericModelFamilySymbols}"
                               SelectedItem="{Binding PostFamilySymbol}" />
                 </UniformGrid>
+                <UniformGrid Rows="2">
+                    <Button Style="{StaticResource SelectButton}"
+                            Content="Создать"
+                            Command="{Binding CreateSafetyBarrierCommand}" />
+                </UniformGrid>
             </UniformGrid>
         </GroupBox>
     </StackPanel>
