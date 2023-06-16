@@ -88,7 +88,7 @@ namespace SafetyBarriers
         }
         #endregion
 
-        #region Тест создание стоек барьерного ограждения
+        #region Создание стоек барьерного ограждения
         public void CreatePostFamilyInstances(string familyAndSymbolName)
         {
             double boundParameter1;
@@ -100,50 +100,19 @@ namespace SafetyBarriers
             FamilySymbol fSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, familyAndSymbolName);
 
             var pointParameters = GenerateParameters(boundParameter1, boundParameter2);
+            var postLocation = new List<(XYZ Point, double Rotation)>();
 
-            var postTransform = new List<(Transform, double)>();
+            //string resultPath = @"O:\Revit Infrastructure Tools\SafetyBarriers\SafetyBarriers\TextFile1.txt";
 
-            string resultPath = @"O:\Revit Infrastructure Tools\SafetyBarriers\SafetyBarriers\TextFile1.txt";
-            using (StreamWriter sw = new StreamWriter(resultPath, false, Encoding.Default))
+            foreach (double parameter in pointParameters)
             {
-                foreach (double parameter in pointParameters)
-                {
-                    Line targetLine;
-                    XYZ point = BarrierAxis.GetPointOnPolyLine(parameter, out targetLine);
-                    Transform transform = Transform.CreateTranslation(point);
-
-                    XYZ lineVector = targetLine.GetEndPoint(0) - targetLine.GetEndPoint(1);
-
-                    double angle = UnitUtils.ConvertToInternalUnits(90, UnitTypeId.Degrees);
-                    double rotationAngle = lineVector.AngleTo(XYZ.BasisY);
-                    if (rotationAngle >= Math.PI / 2 && rotationAngle <= Math.PI && lineVector.X > 0)
-                    {
-                        rotationAngle = -(rotationAngle - Math.PI / 2);
-                    }
-                    else if (rotationAngle >= 0 && rotationAngle <= Math.PI / 2 && lineVector.X > 0)
-                    {
-                        rotationAngle = Math.PI / 2 - rotationAngle;
-                    }
-                    else if(rotationAngle >= 0 && rotationAngle <= Math.PI / 2 && lineVector.X < 0)
-                    {
-                        rotationAngle = Math.PI / 2 + rotationAngle;
-                    }
-                    else if(rotationAngle >= Math.PI / 2 && rotationAngle <= Math.PI && lineVector.X < 0)
-                    {
-                        rotationAngle = rotationAngle + Math.PI / 2;
-                    }
-                    else if(lineVector.X == 0)
-                    {
-                        rotationAngle = rotationAngle + Math.PI / 2;
-                    }
-
-                    sw.WriteLine($"{UnitUtils.ConvertFromInternalUnits(rotationAngle, UnitTypeId.Degrees)} | {lineVector}");
-
-                    postTransform.Add((transform, rotationAngle));
-                }
+                Line targetLine;
+                XYZ point = BarrierAxis.GetPointOnPolyLine(parameter, out targetLine);
+                XYZ lineVector = targetLine.GetEndPoint(0) - targetLine.GetEndPoint(1);
+                double rotationAngle = lineVector.AngleTo(XYZ.BasisY);
+                rotationAngle = RotatePost(rotationAngle, lineVector, false);
+                postLocation.Add((point, rotationAngle));
             }
-
-
 
             using (Transaction trans = new Transaction(Doc, "Create Posts"))
             {
@@ -152,13 +121,12 @@ namespace SafetyBarriers
                 {
                     fSymbol.Activate();
                 }
-                foreach (var transform in postTransform)
+                foreach (var location in postLocation)
                 {
-                    FamilyInstance familyInstance = Doc.Create.NewFamilyInstance(transform.Item1.Origin, fSymbol, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+                    FamilyInstance familyInstance = Doc.Create.NewFamilyInstance(location.Item1, fSymbol, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
 
-                    familyInstance.Location.Rotate(Line.CreateUnbound(transform.Item1.Origin, XYZ.BasisZ), transform.Item2);
+                    familyInstance.Location.Rotate(Line.CreateUnbound(location.Point, XYZ.BasisZ), location.Rotation);
                 }
-
                 trans.Commit();
             }
         }
@@ -186,6 +154,39 @@ namespace SafetyBarriers
             parameters.Add(bound2);
 
             return parameters;
+        }
+        #endregion
+
+        #region Поворот стоек
+        private double RotatePost(double rotationAngle, XYZ lineVector, bool isRotateOn180)
+        {
+            double resultRotationAngle = rotationAngle;
+
+            if (rotationAngle >= Math.PI / 2 && rotationAngle <= Math.PI && lineVector.X > 0)
+            {
+                resultRotationAngle = -(rotationAngle - Math.PI / 2);
+            }
+            else if (rotationAngle >= 0 && rotationAngle <= Math.PI / 2 && lineVector.X > 0)
+            {
+                resultRotationAngle = Math.PI / 2 - rotationAngle;
+            }
+            else if (rotationAngle >= 0 && rotationAngle <= Math.PI / 2 && lineVector.X < 0)
+            {
+                resultRotationAngle = Math.PI / 2 + rotationAngle;
+            }
+            else if (rotationAngle >= Math.PI / 2 && rotationAngle <= Math.PI && lineVector.X < 0)
+            {
+                resultRotationAngle = rotationAngle + Math.PI / 2;
+            }
+            else if (lineVector.X == 0)
+            {
+                resultRotationAngle = rotationAngle + Math.PI / 2;
+            }
+
+            if (isRotateOn180)
+                return resultRotationAngle + Math.PI;
+
+            return resultRotationAngle;
         }
         #endregion
     }
