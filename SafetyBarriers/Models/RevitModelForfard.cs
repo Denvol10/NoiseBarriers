@@ -89,7 +89,7 @@ namespace SafetyBarriers
         #endregion
 
         #region Создание стоек барьерного ограждения
-        public void CreatePostFamilyInstances(string familyAndSymbolName, bool isRotateOn180)
+        public void CreatePostFamilyInstances(string familyAndSymbolName, bool isRotateOn180, string alignment)
         {
             string resultPath = @"O:\Revit Infrastructure Tools\SafetyBarriers\SafetyBarriers\TextFile1.txt";
 
@@ -101,8 +101,7 @@ namespace SafetyBarriers
 
             FamilySymbol fSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, familyAndSymbolName);
 
-
-            var pointParameters = GenerateParameters(boundParameter1, boundParameter2, 2.5);
+            var pointParameters = GenerateParameters(boundParameter1, boundParameter2, 2.5, alignment);
             var postLocation = new List<(XYZ Point, double Rotation)>();
 
             foreach (double parameter in pointParameters)
@@ -136,25 +135,61 @@ namespace SafetyBarriers
         }
         #endregion
 
-        #region Генератор параметров на поликривой
-        private List<double> GenerateParameters(double bound1, double bound2, double step)
+        #region Генератор параметров на полилинии
+        private List<double> GenerateParameters(double bound1, double bound2, double step, string alignment)
         {
             var parameters = new List<double>();
 
             double postsStep = UnitUtils.ConvertToInternalUnits(step, UnitTypeId.Meters);
-
             double start = Math.Min(bound1, bound2);
             double finish = Math.Max(bound1, bound2);
-            parameters.Add(start);
-
-            int count = (int)((finish - start) / postsStep);
-
-            for (int i = 0; i < count; i++)
+            
+            if(alignment == "Начало")
             {
-                parameters.Add(start + postsStep);
-                start += postsStep;
+                parameters.Add(start);
+                int count = (int)((finish - start) / postsStep);
+
+                for (int i = 0; i < count; i++)
+                {
+                    parameters.Add(start + postsStep);
+                    start += postsStep;
+                }
+            }    
+
+            if(alignment == "Конец")
+            {
+                parameters.Add(finish);
+                int count = (int)((finish - start) / postsStep);
+
+                for (int i = 0; i < count; i++)
+                {
+                    parameters.Add(finish - postsStep);
+                    finish -= postsStep;
+                }
             }
 
+            if(alignment == "Середина")
+            {
+                double middleParameter = (finish + start) / 2;
+                parameters.Add(middleParameter);
+                parameters.Add(start);
+                parameters.Add(finish);
+
+                int count = (int)((finish - start) / postsStep / 2);
+                double curBeforeMiddle = middleParameter;
+                for(int i = 0; i < count; i++)
+                {
+                    parameters.Add(curBeforeMiddle - postsStep);
+                    curBeforeMiddle -= postsStep;
+                }
+
+                double curAfterMiddle = middleParameter;
+                for(int i = 0; i < count; i++)
+                {
+                    parameters.Add(curAfterMiddle + postsStep);
+                    curAfterMiddle += postsStep;
+                }
+            }
 
             return parameters;
         }
