@@ -119,6 +119,8 @@
                               SelectedItem="{Binding PostFamilySymbol}" />
                 </UniformGrid>
                 <UniformGrid Rows="2">
+                    <CheckBox Content="Развернуть ограждение"
+                              IsChecked="{Binding IsRotateOn180}" />
                     <Button Style="{StaticResource SelectButton}"
                             Content="Создать"
                             Command="{Binding CreateSafetyBarrierCommand}" />

@@ -83,6 +83,15 @@ namespace SafetyBarriers.ViewModels
         }
         #endregion
 
+        #region Поворот на 180 градусов
+        private bool _isRotateOn180;
+        public bool IsRotateOn180
+        {
+            get => _isRotateOn180;
+            set => Set(ref _isRotateOn180, value);
+        }
+        #endregion
+
         #region Команды
 
         #region Получение оси барьерного ограждения
@@ -141,7 +150,7 @@ namespace SafetyBarriers.ViewModels
 
         private void OnCreateSafetyBarrierCommandExecuted(object parameter)
         {
-            RevitModel.CreatePostFamilyInstances(PostFamilySymbol);
+            RevitModel.CreatePostFamilyInstances(PostFamilySymbol, IsRotateOn180);
         }
 
         public bool CanCreateSafetyBarrierCommandExecute(object parameter)

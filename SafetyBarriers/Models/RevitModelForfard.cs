@@ -89,7 +89,7 @@ namespace SafetyBarriers
         #endregion
 
         #region Создание стоек барьерного ограждения
-        public void CreatePostFamilyInstances(string familyAndSymbolName)
+        public void CreatePostFamilyInstances(string familyAndSymbolName, bool isRotateOn180)
         {
             double boundParameter1;
             BarrierAxis.Intersect(BoundCurve1, out boundParameter1);
@@ -110,7 +110,7 @@ namespace SafetyBarriers
                 XYZ point = BarrierAxis.GetPointOnPolyLine(parameter, out targetLine);
                 XYZ lineVector = targetLine.GetEndPoint(0) - targetLine.GetEndPoint(1);
                 double rotationAngle = lineVector.AngleTo(XYZ.BasisY);
-                rotationAngle = RotatePost(rotationAngle, lineVector, false);
+                rotationAngle = RotatePost(rotationAngle, lineVector, isRotateOn180);
                 postLocation.Add((point, rotationAngle));
             }
 
