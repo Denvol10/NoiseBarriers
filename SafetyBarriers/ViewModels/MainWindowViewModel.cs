@@ -186,7 +186,11 @@ namespace SafetyBarriers.ViewModels
 
         private void OnCreateSafetyBarrierCommandExecuted(object parameter)
         {
-            RevitModel.CreatePostFamilyInstances(PostFamilySymbol, IsRotateOn180, SelectedAlignmentSafityBarrier);
+            RevitModel.CreatePostFamilyInstances(PostFamilySymbol,
+                                                 IsRotateOn180,
+                                                 SelectedAlignmentSafityBarrier,
+                                                 IsIncludeStartPost,
+                                                 IsIncludeFinishPost);
         }
 
         public bool CanCreateSafetyBarrierCommandExecute(object parameter)

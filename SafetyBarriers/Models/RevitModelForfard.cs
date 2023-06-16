@@ -89,10 +89,12 @@ namespace SafetyBarriers
         #endregion
 
         #region Создание стоек барьерного ограждения
-        public void CreatePostFamilyInstances(string familyAndSymbolName, bool isRotateOn180, string alignment)
+        public void CreatePostFamilyInstances(string familyAndSymbolName,
+                                              bool isRotateOn180,
+                                              string alignment,
+                                              bool isIncludeStart,
+                                              bool isIncludeFinish)
         {
-            string resultPath = @"O:\Revit Infrastructure Tools\SafetyBarriers\SafetyBarriers\TextFile1.txt";
-
             double boundParameter1;
             BarrierAxis.Intersect(BoundCurve1, out boundParameter1);
 
@@ -101,20 +103,17 @@ namespace SafetyBarriers
 
             FamilySymbol fSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, familyAndSymbolName);
 
-            var pointParameters = GenerateParameters(boundParameter1, boundParameter2, 2.5, alignment);
+            var pointParameters = GenerateParameters(boundParameter1, boundParameter2, 2.5, alignment, isIncludeStart, isIncludeFinish);
             var postLocation = new List<(XYZ Point, double Rotation)>();
 
             foreach (double parameter in pointParameters)
             {
-                using (StreamWriter sw = new StreamWriter(resultPath, false, Encoding.Default))
-                {
-                    Line targetLine;
-                    XYZ point = BarrierAxis.GetPointOnPolyLine(parameter, out targetLine);
-                    XYZ lineVector = targetLine.GetEndPoint(0) - targetLine.GetEndPoint(1);
-                    double rotationAngle = lineVector.AngleTo(XYZ.BasisY);
-                    rotationAngle = RotatePost(rotationAngle, lineVector, isRotateOn180);
-                    postLocation.Add((point, rotationAngle));
-                }
+                Line targetLine;
+                XYZ point = BarrierAxis.GetPointOnPolyLine(parameter, out targetLine);
+                XYZ lineVector = targetLine.GetEndPoint(0) - targetLine.GetEndPoint(1);
+                double rotationAngle = lineVector.AngleTo(XYZ.BasisY);
+                rotationAngle = RotatePost(rotationAngle, lineVector, isRotateOn180);
+                postLocation.Add((point, rotationAngle));
             }
 
             using (Transaction trans = new Transaction(Doc, "Create Posts"))
@@ -136,17 +135,24 @@ namespace SafetyBarriers
         #endregion
 
         #region Генератор параметров на полилинии
-        private List<double> GenerateParameters(double bound1, double bound2, double step, string alignment)
+        private List<double> GenerateParameters(double bound1,
+                                                double bound2,
+                                                double step,
+                                                string alignment,
+                                                bool isIncludeStart,
+                                                bool isIncludeFinish)
         {
             var parameters = new List<double>();
 
             double postsStep = UnitUtils.ConvertToInternalUnits(step, UnitTypeId.Meters);
             double start = Math.Min(bound1, bound2);
             double finish = Math.Max(bound1, bound2);
-            
-            if(alignment == "Начало")
+
+            if (alignment == "Начало")
             {
-                parameters.Add(start);
+                if (isIncludeStart)
+                    parameters.Add(start);
+
                 int count = (int)((finish - start) / postsStep);
 
                 for (int i = 0; i < count; i++)
@@ -154,11 +160,16 @@ namespace SafetyBarriers
                     parameters.Add(start + postsStep);
                     start += postsStep;
                 }
-            }    
 
-            if(alignment == "Конец")
+                if (isIncludeFinish)
+                    parameters.Add(finish);
+            }
+
+            if (alignment == "Конец")
             {
-                parameters.Add(finish);
+                if (isIncludeStart)
+                    parameters.Add(finish);
+
                 int count = (int)((finish - start) / postsStep);
 
                 for (int i = 0; i < count; i++)
@@ -166,25 +177,32 @@ namespace SafetyBarriers
                     parameters.Add(finish - postsStep);
                     finish -= postsStep;
                 }
+
+                if (isIncludeFinish)
+                    parameters.Add(start);
             }
 
-            if(alignment == "Середина")
+            if (alignment == "Середина")
             {
                 double middleParameter = (finish + start) / 2;
                 parameters.Add(middleParameter);
-                parameters.Add(start);
-                parameters.Add(finish);
+
+                if (isIncludeStart)
+                    parameters.Add(start);
+
+                if (isIncludeFinish)
+                    parameters.Add(finish);
 
                 int count = (int)((finish - start) / postsStep / 2);
                 double curBeforeMiddle = middleParameter;
-                for(int i = 0; i < count; i++)
+                for (int i = 0; i < count; i++)
                 {
                     parameters.Add(curBeforeMiddle - postsStep);
                     curBeforeMiddle -= postsStep;
                 }
 
                 double curAfterMiddle = middleParameter;
-                for(int i = 0; i < count; i++)
+                for (int i = 0; i < count; i++)
                 {
                     parameters.Add(curAfterMiddle + postsStep);
                     curAfterMiddle += postsStep;
