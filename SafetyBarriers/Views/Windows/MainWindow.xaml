@@ -66,6 +66,17 @@
             <Setter Property="Margin"
                     Value="2,0,3,0" />
         </Style>
+        <Style x:Key="ComboBoxStyle"
+               TargetType="ComboBox">
+            <Setter Property="Width"
+                    Value="150" />
+            <Setter Property="Height"
+                    Value="22" />
+            <Setter Property="VerticalAlignment"
+                    Value="Top" />
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center" />
+        </Style>
     </Window.Resources>
     <StackPanel>
         <GroupBox Header="Ось барьерного ограждения"
@@ -110,13 +121,18 @@
         <GroupBox Header="Стойки барьерного ограждения"
                   Style="{StaticResource BorderGroupStyle}">
             <UniformGrid Columns="2">
-                <UniformGrid Rows="2">
+                <UniformGrid Rows="4">
                     <TextBlock Text="Стойка"
                                Style="{StaticResource TextAboveButton}" />
-                    <ComboBox Width="150"
+                    <ComboBox Style="{StaticResource ComboBoxStyle}"
                               Margin="0,2,0,0"
                               ItemsSource="{Binding GenericModelFamilySymbols}"
                               SelectedItem="{Binding PostFamilySymbol}" />
+                    <TextBlock Text="Выравнивание ограждения"
+                               Style="{StaticResource TextAboveButton}" />
+                    <ComboBox Style="{StaticResource ComboBoxStyle}"
+                              ItemsSource="{Binding AlignmentSafityBarrier}"
+                              SelectedItem="{Binding SelectedAlignmentSafityBarrier}" />
                 </UniformGrid>
                 <UniformGrid Rows="2">
                     <CheckBox Content="Развернуть ограждение"

@@ -92,6 +92,24 @@ namespace SafetyBarriers.ViewModels
         }
         #endregion
 
+        #region Начало построения ограждения
+        private ObservableCollection<string> _alignmentSafityBarrier;
+        public ObservableCollection<string> AlignmentSafityBarrier
+        {
+            get => _alignmentSafityBarrier;
+            set => Set(ref _alignmentSafityBarrier, value);
+        }
+        #endregion
+
+        #region Выбранное начало построения ограждения
+        private string _selectedAlignmentSafityBarrier;
+        public string SelectedAlignmentSafityBarrier
+        {
+            get => _selectedAlignmentSafityBarrier;
+            set => Set(ref _selectedAlignmentSafityBarrier, value);
+        }
+        #endregion
+
         #region Команды
 
         #region Получение оси барьерного ограждения
@@ -168,6 +186,15 @@ namespace SafetyBarriers.ViewModels
             RevitModel = revitModel;
 
             GenericModelFamilySymbols = RevitModel.GetPostFamilySymbolNames();
+
+            AlignmentSafityBarrier = new ObservableCollection<string>
+            {
+                "Начало",
+                "Конец",
+                "Середина"
+            };
+
+            SelectedAlignmentSafityBarrier = "Начало";
 
             #region Команды
             GetBarrierAxisCommand = new LambdaCommand(OnGetBarrierAxisCommandExecuted, CanGetBarrierAxisCommandExecute);
