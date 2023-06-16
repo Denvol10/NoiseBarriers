@@ -134,9 +134,13 @@
                               ItemsSource="{Binding AlignmentSafityBarrier}"
                               SelectedItem="{Binding SelectedAlignmentSafityBarrier}" />
                 </UniformGrid>
-                <UniformGrid Rows="2">
+                <UniformGrid Rows="4">
                     <CheckBox Content="Развернуть ограждение"
                               IsChecked="{Binding IsRotateOn180}" />
+                    <CheckBox Content="Начальная стойка"
+                              IsChecked="{Binding IsIncludeStartPost}" />
+                    <CheckBox Content="Конечная стойка"
+                              IsChecked="{Binding IsIncludeFinishPost}" />
                     <Button Style="{StaticResource SelectButton}"
                             Content="Создать"
                             Command="{Binding CreateSafetyBarrierCommand}" />

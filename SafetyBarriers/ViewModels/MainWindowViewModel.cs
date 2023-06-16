@@ -110,6 +110,24 @@ namespace SafetyBarriers.ViewModels
         }
         #endregion
 
+        #region Начальная стойка ограждения
+        private bool _isIncludeStartPost = true;
+        public bool IsIncludeStartPost
+        {
+            get => _isIncludeStartPost;
+            set => Set(ref _isIncludeStartPost, value);
+        }
+        #endregion
+
+        #region Конечная стойка ограждения
+        private bool _isIncludeFinishPost = true;
+        public bool IsIncludeFinishPost
+        {
+            get => _isIncludeFinishPost;
+            set => Set(ref _isIncludeFinishPost, value);
+        }
+        #endregion
+
         #region Команды
 
         #region Получение оси барьерного ограждения
