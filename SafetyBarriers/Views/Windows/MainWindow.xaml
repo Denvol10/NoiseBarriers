@@ -147,5 +147,17 @@
                 </UniformGrid>
             </UniformGrid>
         </GroupBox>
+        <GroupBox Header="Полотно ограждения"
+                  Style="{StaticResource BorderGroupStyle}">
+            <UniformGrid Columns="2">
+                <UniformGrid Rows="2">
+                    <TextBlock Text="Полотно ограждения"
+                               Style="{StaticResource TextAboveButton}" />
+                    <ComboBox Style="{StaticResource ComboBoxStyle}"
+                              ItemsSource="{Binding BeamFamilySymbols}"
+                              SelectedItem="{Binding SelectedBeamFamilySymbol}" />
+                </UniformGrid>
+            </UniformGrid>
+        </GroupBox>
     </StackPanel>
 </Window>

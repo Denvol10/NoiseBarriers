@@ -128,6 +128,24 @@ namespace SafetyBarriers.ViewModels
         }
         #endregion
 
+        #region Полотно ограждения
+        private ObservableCollection<string> _beamFamilySymbols;
+        public ObservableCollection<string> BeamFamilySymbols
+        {
+            get => _beamFamilySymbols;
+            set => Set(ref _beamFamilySymbols, value);
+        }
+        #endregion
+
+        #region Выбранное полотно ограждения
+        private string _selectedBeamFamilySymbol;
+        public string SelectedBeamFamilySymbol
+        {
+            get => _selectedBeamFamilySymbol;
+            set => Set(ref _selectedBeamFamilySymbol, value);
+        }
+        #endregion
+
         #region Команды
 
         #region Получение оси барьерного ограждения
@@ -186,11 +204,11 @@ namespace SafetyBarriers.ViewModels
 
         private void OnCreateSafetyBarrierCommandExecuted(object parameter)
         {
-            RevitModel.CreatePostFamilyInstances(PostFamilySymbol,
-                                                 IsRotateOn180,
+            RevitModel.GetLocationPostFamilyInstances(IsRotateOn180,
                                                  SelectedAlignmentSafityBarrier,
                                                  IsIncludeStartPost,
                                                  IsIncludeFinishPost);
+            RevitModel.CreateSafetyBarrier(PostFamilySymbol);
         }
 
         public bool CanCreateSafetyBarrierCommandExecute(object parameter)
@@ -208,6 +226,8 @@ namespace SafetyBarriers.ViewModels
             RevitModel = revitModel;
 
             GenericModelFamilySymbols = RevitModel.GetPostFamilySymbolNames();
+
+            BeamFamilySymbols = RevitModel.GetBeamFamilySymbolNames();
 
             AlignmentSafityBarrier = new ObservableCollection<string>
             {

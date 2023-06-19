@@ -160,6 +160,16 @@ namespace SafetyBarriers.Models
             return null;
         }
 
+        public Plane GetPlaneOnPolyLine(double parameter)
+        {
+            Line targetLine = null;
+            XYZ originPoint = GetPointOnPolyLine(parameter, out targetLine);
+            XYZ normal = (targetLine.GetEndPoint(1) - targetLine.GetEndPoint(0)).Normalize();
+            Plane plane = Plane.CreateByNormalAndOrigin(normal, originPoint);
+
+            return plane;
+        }
+
         private static bool IsNextCurve(Curve curve1, Curve curve2)
         {
 

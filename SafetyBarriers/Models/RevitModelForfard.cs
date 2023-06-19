@@ -88,9 +88,20 @@ namespace SafetyBarriers
         }
         #endregion
 
-        #region Создание стоек барьерного ограждения
-        public void CreatePostFamilyInstances(string familyAndSymbolName,
-                                              bool isRotateOn180,
+        #region Получение названиий семейств для полотен барьерного ограждения
+        public ObservableCollection<string> GetBeamFamilySymbolNames()
+        {
+            var familySymbols = RevitFamilyUtils.GetFamilySymbolNames(Doc, BuiltInCategory.OST_StructuralFraming);
+            return familySymbols;
+        }
+        #endregion
+
+        #region Положение стоек барьерного ограждения
+        private List<(XYZ Point, double Rotation)> _postLocations = new List<(XYZ Point, double Rotation)>();
+        #endregion
+
+        #region Получение положения стоек барьерного ограждения
+        public void GetLocationPostFamilyInstances(bool isRotateOn180,
                                               string alignment,
                                               bool isIncludeStart,
                                               bool isIncludeFinish)
@@ -101,10 +112,8 @@ namespace SafetyBarriers
             double boundParameter2;
             BarrierAxis.Intersect(BoundCurve2, out boundParameter2);
 
-            FamilySymbol fSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, familyAndSymbolName);
-
             var pointParameters = GenerateParameters(boundParameter1, boundParameter2, 2.5, alignment, isIncludeStart, isIncludeFinish);
-            var postLocation = new List<(XYZ Point, double Rotation)>();
+            //var _postLocations = new List<(XYZ Point, double Rotation)>();
 
             foreach (double parameter in pointParameters)
             {
@@ -113,19 +122,26 @@ namespace SafetyBarriers
                 XYZ lineVector = targetLine.GetEndPoint(0) - targetLine.GetEndPoint(1);
                 double rotationAngle = lineVector.AngleTo(XYZ.BasisY);
                 rotationAngle = RotatePost(rotationAngle, lineVector, isRotateOn180);
-                postLocation.Add((point, rotationAngle));
+                _postLocations.Add((point, rotationAngle));
             }
+        }
+        #endregion
 
-            using (Transaction trans = new Transaction(Doc, "Create Posts"))
+        #region Создание барьерного ограждения
+        public void CreateSafetyBarrier(string postFamilyAndSymbolName)
+        {
+            FamilySymbol postFSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, postFamilyAndSymbolName);
+
+            using (Transaction trans = new Transaction(Doc, "Created Safety Barrier"))
             {
                 trans.Start();
-                if (!fSymbol.IsActive)
+                if (!postFSymbol.IsActive)
                 {
-                    fSymbol.Activate();
+                    postFSymbol.Activate();
                 }
-                foreach (var location in postLocation)
+                foreach (var location in _postLocations)
                 {
-                    FamilyInstance familyInstance = Doc.Create.NewFamilyInstance(location.Item1, fSymbol, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+                    FamilyInstance familyInstance = Doc.Create.NewFamilyInstance(location.Item1, postFSymbol, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
 
                     familyInstance.Location.Rotate(Line.CreateUnbound(location.Point, XYZ.BasisZ), location.Rotation);
                 }
