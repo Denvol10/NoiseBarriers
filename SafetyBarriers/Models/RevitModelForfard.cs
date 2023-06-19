@@ -13,6 +13,8 @@ using System.Collections.ObjectModel;
 using BridgeDeck.Models;
 using SafetyBarriers.Models;
 using System.IO;
+using System.Windows.Controls;
+using Autodesk.Revit.DB.Structure;
 
 namespace SafetyBarriers
 {
@@ -109,7 +111,7 @@ namespace SafetyBarriers
         #endregion
 
         #region Положение полотен барьерного ограждения
-        private List<Line> _beamLocations = new List<Line>();
+        private List<Curve> _beamLocations = new List<Curve>();
         #endregion
 
         #region Получение парметров границ барьерного ограждения
@@ -142,16 +144,36 @@ namespace SafetyBarriers
         #endregion
 
         #region Получения положения полотна барьерного ограждения
-        public void GetLocationBeamFamilyInstances()
+        public void GetLocationBeamFamilyInstances(string alignment, bool isIncludeStart, bool isIncludeFinish)
         {
+            var pointParameters = GenerateParameters(_boundParameter1, _boundParameter2, 3, alignment, isIncludeStart, isIncludeFinish);
+            var beamPoints = new List<XYZ>();
+            foreach (double parameter in pointParameters)
+            {
+                Plane plane = BarrierAxis.GetPlaneOnPolyLine(parameter);
+                double offsetX = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
+                XYZ vectorX = plane.XVec.Normalize() * offsetX;
+                beamPoints.Add(plane.Origin + vectorX);
+            }
 
+            var linePoints = GetPairs(beamPoints);
+
+            foreach (var points in linePoints)
+            {
+                Line beamLine = Line.CreateBound(points.Item1, points.Item2);
+                _beamLocations.Add(beamLine);
+            }
         }
         #endregion
 
         #region Создание барьерного ограждения
-        public void CreateSafetyBarrier(string postFamilyAndSymbolName)
+        public void CreateSafetyBarrier(string postFamilyAndSymbolName, string beamFamilyAndSymbolName)
         {
             FamilySymbol postFSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, postFamilyAndSymbolName);
+
+            FamilySymbol beamFSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, beamFamilyAndSymbolName);
+            var level = new FilteredElementCollector(Doc).OfCategory(BuiltInCategory.OST_Levels).Where(e => e.Name == "Уровень 1").First() as Level;
+
 
             using (Transaction trans = new Transaction(Doc, "Created Safety Barrier"))
             {
@@ -160,12 +182,29 @@ namespace SafetyBarriers
                 {
                     postFSymbol.Activate();
                 }
+
+                if (!beamFSymbol.IsActive)
+                {
+                    beamFSymbol.Activate();
+                }
+
                 foreach (var location in _postLocations)
                 {
-                    FamilyInstance familyInstance = Doc.Create.NewFamilyInstance(location.Item1, postFSymbol, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+                    FamilyInstance postFamilyInstance = Doc.Create.NewFamilyInstance(location.Item1, postFSymbol, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
 
-                    familyInstance.Location.Rotate(Line.CreateUnbound(location.Point, XYZ.BasisZ), location.Rotation);
+                    postFamilyInstance.Location.Rotate(Line.CreateUnbound(location.Point, XYZ.BasisZ), location.Rotation);
                 }
+
+                foreach (var location in _beamLocations)
+                {
+                    FamilyInstance beamFamilyInstance = Doc.Create.NewFamilyInstance(location,
+                                                                                     beamFSymbol,
+                                                                                     level,
+                                                                                     Autodesk.Revit.DB.Structure.StructuralType.Beam);
+                    StructuralFramingUtils.DisallowJoinAtEnd(beamFamilyInstance, 0);
+                    StructuralFramingUtils.DisallowJoinAtEnd(beamFamilyInstance, 1);
+                }
+
                 trans.Commit();
             }
         }
@@ -280,6 +319,18 @@ namespace SafetyBarriers
                 return resultRotationAngle + Math.PI;
 
             return resultRotationAngle;
+        }
+
+        private static List<(XYZ, XYZ)> GetPairs(IEnumerable<XYZ> elems)
+        {
+            var result = new List<(XYZ, XYZ)>();
+
+            for (int i = 0; i < elems.Count() - 1; i++)
+            {
+                result.Add((elems.ElementAt(i), elems.ElementAt(i + 1)));
+            }
+
+            return result;
         }
         #endregion
     }

@@ -209,7 +209,8 @@ namespace SafetyBarriers.ViewModels
                                                  SelectedAlignmentSafityBarrier,
                                                  IsIncludeStartPost,
                                                  IsIncludeFinishPost);
-            RevitModel.CreateSafetyBarrier(PostFamilySymbol);
+            RevitModel.GetLocationBeamFamilyInstances(SelectedAlignmentSafityBarrier, IsIncludeStartPost, IsIncludeFinishPost);
+            RevitModel.CreateSafetyBarrier(PostFamilySymbol, SelectedBeamFamilySymbol);
         }
 
         public bool CanCreateSafetyBarrierCommandExecute(object parameter)
