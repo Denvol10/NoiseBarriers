@@ -148,12 +148,40 @@ namespace SafetyBarriers
         {
             var pointParameters = GenerateParameters(_boundParameter1, _boundParameter2, 3, alignment, isIncludeStart, isIncludeFinish);
             var beamPoints = new List<XYZ>();
-            foreach (double parameter in pointParameters)
+            string resultPath = @"O:\Revit Infrastructure Tools\SafetyBarriers\SafetyBarriers\result.txt";
+
+            using (StreamWriter sw = new StreamWriter(resultPath, false, Encoding.Default))
             {
-                Plane plane = BarrierAxis.GetPlaneOnPolyLine(parameter);
-                double offsetX = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
-                XYZ vectorX = plane.XVec.Normalize() * offsetX;
-                beamPoints.Add(plane.Origin + vectorX);
+                foreach (double parameter in pointParameters)
+                {
+                    Plane plane = BarrierAxis.GetPlaneOnPolyLine(parameter);
+                    if (plane.XVec.Z == -1 || plane.XVec.Z == 1)
+                    {
+                        plane = Plane.CreateByOriginAndBasis(plane.Origin, plane.YVec, plane.XVec);
+                    }
+
+                    double offsetX = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
+                    XYZ vectorX = MirrorBeam(plane, offsetX);
+                    //XYZ lineVector = plane.Normal;
+                    //double rotationAngle = lineVector.AngleTo(XYZ.BasisY);
+
+                    //sw.WriteLine($"{rotationAngle} | {lineVector}");
+
+                    //if (rotationAngle >= 0 && rotationAngle <= Math.PI / 2 && lineVector.X > 0)
+                    //{
+                    //    vectorX = vectorX.Negate();
+                    //}
+                    //else if (rotationAngle >= 0 && rotationAngle < Math.PI / 2 && lineVector.X < 0)
+                    //{
+                    //    vectorX = vectorX.Negate();
+                    //}
+                    //else if (lineVector.X == 0 && rotationAngle != 0)
+                    //{
+                    //    vectorX = vectorX.Negate();
+                    //}
+
+                    beamPoints.Add(plane.Origin + vectorX);
+                }
             }
 
             var linePoints = GetPairs(beamPoints);
@@ -320,6 +348,30 @@ namespace SafetyBarriers
 
             return resultRotationAngle;
         }
+
+        #region Положение ограждения
+        private XYZ MirrorBeam(Plane plane, double offsetX)
+        {
+            XYZ vectorX = vectorX = plane.XVec.Normalize() * offsetX;
+            XYZ lineVector = plane.Normal;
+            double rotationAngle = lineVector.AngleTo(XYZ.BasisY);
+
+            if (rotationAngle >= 0 && rotationAngle <= Math.PI / 2 && lineVector.X > 0)
+            {
+                vectorX = vectorX.Negate();
+            }
+            else if (rotationAngle >= 0 && rotationAngle < Math.PI / 2 && lineVector.X < 0)
+            {
+                vectorX = vectorX.Negate();
+            }
+            else if (lineVector.X == 0 && rotationAngle != 0)
+            {
+                vectorX = vectorX.Negate();
+            }
+
+            return vectorX;
+        }
+        #endregion
 
         private static List<(XYZ, XYZ)> GetPairs(IEnumerable<XYZ> elems)
         {
