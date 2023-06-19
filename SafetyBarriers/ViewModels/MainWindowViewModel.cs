@@ -204,6 +204,7 @@ namespace SafetyBarriers.ViewModels
 
         private void OnCreateSafetyBarrierCommandExecuted(object parameter)
         {
+            RevitModel.GetBoundParameters();
             RevitModel.GetLocationPostFamilyInstances(IsRotateOn180,
                                                  SelectedAlignmentSafityBarrier,
                                                  IsIncludeStartPost,

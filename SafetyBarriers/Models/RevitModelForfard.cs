@@ -96,8 +96,29 @@ namespace SafetyBarriers
         }
         #endregion
 
+        #region Параметр границы барьерного ограждения 1
+        private double _boundParameter1;
+        #endregion
+
+        #region Параметр границы барьерного ограждения 2
+        private double _boundParameter2;
+        #endregion
+
         #region Положение стоек барьерного ограждения
         private List<(XYZ Point, double Rotation)> _postLocations = new List<(XYZ Point, double Rotation)>();
+        #endregion
+
+        #region Положение полотен барьерного ограждения
+        private List<Line> _beamLocations = new List<Line>();
+        #endregion
+
+        #region Получение парметров границ барьерного ограждения
+        public void GetBoundParameters()
+        {
+            BarrierAxis.Intersect(BoundCurve1, out _boundParameter1);
+
+            BarrierAxis.Intersect(BoundCurve2, out _boundParameter2);
+        }
         #endregion
 
         #region Получение положения стоек барьерного ограждения
@@ -106,14 +127,7 @@ namespace SafetyBarriers
                                               bool isIncludeStart,
                                               bool isIncludeFinish)
         {
-            double boundParameter1;
-            BarrierAxis.Intersect(BoundCurve1, out boundParameter1);
-
-            double boundParameter2;
-            BarrierAxis.Intersect(BoundCurve2, out boundParameter2);
-
-            var pointParameters = GenerateParameters(boundParameter1, boundParameter2, 2.5, alignment, isIncludeStart, isIncludeFinish);
-            //var _postLocations = new List<(XYZ Point, double Rotation)>();
+            var pointParameters = GenerateParameters(_boundParameter1, _boundParameter2, 2.5, alignment, isIncludeStart, isIncludeFinish);
 
             foreach (double parameter in pointParameters)
             {
@@ -124,6 +138,13 @@ namespace SafetyBarriers
                 rotationAngle = RotatePost(rotationAngle, lineVector, isRotateOn180);
                 _postLocations.Add((point, rotationAngle));
             }
+        }
+        #endregion
+
+        #region Получения положения полотна барьерного ограждения
+        public void GetLocationBeamFamilyInstances()
+        {
+
         }
         #endregion
 
