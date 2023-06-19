@@ -148,40 +148,19 @@ namespace SafetyBarriers
         {
             var pointParameters = GenerateParameters(_boundParameter1, _boundParameter2, 3, alignment, isIncludeStart, isIncludeFinish);
             var beamPoints = new List<XYZ>();
-            string resultPath = @"O:\Revit Infrastructure Tools\SafetyBarriers\SafetyBarriers\result.txt";
 
-            using (StreamWriter sw = new StreamWriter(resultPath, false, Encoding.Default))
+            foreach (double parameter in pointParameters)
             {
-                foreach (double parameter in pointParameters)
+                Plane plane = BarrierAxis.GetPlaneOnPolyLine(parameter);
+                if (plane.XVec.Z == -1 || plane.XVec.Z == 1)
                 {
-                    Plane plane = BarrierAxis.GetPlaneOnPolyLine(parameter);
-                    if (plane.XVec.Z == -1 || plane.XVec.Z == 1)
-                    {
-                        plane = Plane.CreateByOriginAndBasis(plane.Origin, plane.YVec, plane.XVec);
-                    }
-
-                    double offsetX = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
-                    XYZ vectorX = MirrorBeam(plane, offsetX);
-                    //XYZ lineVector = plane.Normal;
-                    //double rotationAngle = lineVector.AngleTo(XYZ.BasisY);
-
-                    //sw.WriteLine($"{rotationAngle} | {lineVector}");
-
-                    //if (rotationAngle >= 0 && rotationAngle <= Math.PI / 2 && lineVector.X > 0)
-                    //{
-                    //    vectorX = vectorX.Negate();
-                    //}
-                    //else if (rotationAngle >= 0 && rotationAngle < Math.PI / 2 && lineVector.X < 0)
-                    //{
-                    //    vectorX = vectorX.Negate();
-                    //}
-                    //else if (lineVector.X == 0 && rotationAngle != 0)
-                    //{
-                    //    vectorX = vectorX.Negate();
-                    //}
-
-                    beamPoints.Add(plane.Origin + vectorX);
+                    plane = Plane.CreateByOriginAndBasis(plane.Origin, plane.YVec, plane.XVec);
                 }
+
+                double offsetX = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
+                XYZ vectorX = MirrorBeam(plane, offsetX);
+
+                beamPoints.Add(plane.Origin + vectorX);
             }
 
             var linePoints = GetPairs(beamPoints);
