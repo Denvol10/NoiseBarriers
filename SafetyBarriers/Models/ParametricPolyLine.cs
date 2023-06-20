@@ -114,13 +114,9 @@ namespace SafetyBarriers.Models
             }
         }
 
-        public bool Intersect(Curve curve, out double planeParameter, out double polylineParameter)
+        public bool IntersectAndGetPlaneParameter(Curve curve, out double planeParameter)
         {
-            string resultPath = @"O:\Revit Infrastructure Tools\SafetyBarriers\SafetyBarriers\result.txt";
-
             planeParameter = 0;
-            polylineParameter = 0;
-            XYZ basePoint = null;
 
             foreach (var planeLine in ParametricPlaneLines)
             {
@@ -134,15 +130,66 @@ namespace SafetyBarriers.Models
                         {
                             double normalizedParameter = planeLine.Line.ComputeNormalizedParameter(interResult.UVPoint.U);
                             planeParameter = planeLine.Start + normalizedParameter * planeLine.Line.Length;
-                            basePoint = interResult.XYZPoint;
                         }
                     }
-
                     return true;
                 }
             }
 
-            
+            return false;
+        }
+
+        public bool IntersectAndGetParameter(Curve curve, out double parameter)
+        {
+            string resultPath = @"O:\Revit Infrastructure Tools\SafetyBarriers\SafetyBarriers\result.txt";
+
+            parameter = 0;
+            XYZ basePoint = null;
+
+            using (StreamWriter sw = new StreamWriter(resultPath, false, Encoding.Default))
+            {
+                foreach (var line in ParametricLines)
+                {
+                    XYZ startPoint = line.Line.GetEndPoint(0);
+                    XYZ endPoint = line.Line.GetEndPoint(1);
+
+                    XYZ baseStartPoint = new XYZ(startPoint.X, startPoint.Y, 0);
+                    XYZ baseEndPoint = new XYZ(endPoint.X, endPoint.Y, 0);
+
+                    Line baseLine = Line.CreateBound(baseStartPoint, baseEndPoint);
+
+                    var result = new IntersectionResultArray();
+                    var compResult = baseLine.Intersect(curve, out result);
+                    if (compResult == SetComparisonResult.Overlap)
+                    {
+                        foreach (var elem in result)
+                        {
+                            if (elem is IntersectionResult interResult)
+                            {
+                                basePoint = interResult.XYZPoint;
+                            }
+                        }
+
+                        Line verticalLine = Line.CreateUnbound(basePoint, XYZ.BasisZ);
+
+                        var intersectionResult = new IntersectionResultArray();
+                        var comparResult = line.Line.Intersect(verticalLine, out intersectionResult);
+                        if (comparResult == SetComparisonResult.Overlap)
+                        {
+                            foreach (var elem in intersectionResult)
+                            {
+                                if (elem is IntersectionResult res)
+                                {
+                                    double normalizedParameter = line.Line.ComputeNormalizedParameter(res.UVPoint.U);
+                                    parameter = line.Start + normalizedParameter * line.Line.Length;
+                                }
+                            }
+                        }
+
+                        return true;
+                    }
+                }
+            }
 
             return false;
         }
@@ -199,29 +246,6 @@ namespace SafetyBarriers.Models
             }
 
             return null;
-        }
-
-        public Plane GetPlaneOnPolyLine(double parameter)
-        {
-            XYZ originPoint = null;
-            Line targetLine = null;
-
-            foreach (var line in ParametricLines)
-            {
-                if (line.Start <= parameter && line.Finish >= parameter)
-                {
-                    targetLine = line.Line;
-                    double normalized = (parameter - line.Start) / (line.Finish - line.Start);
-                    originPoint = line.Line.Evaluate(normalized, true);
-                }
-
-            }
-
-            XYZ normal = (targetLine.GetEndPoint(1) - targetLine.GetEndPoint(0)).Normalize();
-
-            Plane plane = Plane.CreateByNormalAndOrigin(normal, originPoint);
-
-            return plane;
         }
 
         private static bool IsNextCurve(Curve curve1, Curve curve2)

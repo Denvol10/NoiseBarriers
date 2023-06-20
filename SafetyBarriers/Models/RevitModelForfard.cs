@@ -124,11 +124,11 @@ namespace SafetyBarriers
         #region Получение парметров границ барьерного ограждения
         public void GetBoundParameters()
         {
-            BarrierAxis.Intersect(BoundCurve1, out _boundPostParameter1, out _);
-            BarrierAxis.Intersect(BoundCurve2, out _boundPostParameter2, out _);
+            BarrierAxis.IntersectAndGetPlaneParameter(BoundCurve1, out _boundPostParameter1);
+            BarrierAxis.IntersectAndGetPlaneParameter(BoundCurve2, out _boundPostParameter2);
 
-            BarrierAxis.Intersect(BoundCurve1, out _boundBeamParameter1, out _);
-            BarrierAxis.Intersect(BoundCurve2, out _boundBeamParameter2, out _);
+            BarrierAxis.IntersectAndGetParameter(BoundCurve1, out _boundBeamParameter1);
+            BarrierAxis.IntersectAndGetParameter(BoundCurve2, out _boundBeamParameter2);
         }
         #endregion
 
