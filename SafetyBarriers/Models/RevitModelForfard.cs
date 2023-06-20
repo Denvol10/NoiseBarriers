@@ -153,7 +153,7 @@ namespace SafetyBarriers
         #endregion
 
         #region Получения положения полотна барьерного ограждения
-        public void GetLocationBeamFamilyInstances(string alignment, bool isIncludeStart, bool isIncludeFinish)
+        public void GetLocationBeamFamilyInstances(bool isRotateOn180, string alignment, bool isIncludeStart, bool isIncludeFinish)
         {
             var pointParameters = GenerateParameters(_boundBeamParameter1, _boundBeamParameter2, 3, alignment, isIncludeStart, isIncludeFinish);
             var beamPoints = new List<XYZ>();
@@ -165,9 +165,14 @@ namespace SafetyBarriers
 
                 Line targetLine;
                 XYZ point = BarrierAxis.GetPointOnPolyLine(parameter, out targetLine);
-                XYZ normal = targetLine.GetEndPoint(0) - targetLine.GetEndPoint(1);
+                XYZ normal = targetLine.GetEndPoint(1) - targetLine.GetEndPoint(0);
 
                 XYZ vectorX = normal.CrossProduct(XYZ.BasisZ).Normalize() * offsetX;
+                if(isRotateOn180)
+                {
+                    vectorX = vectorX.Negate();
+                }
+
                 XYZ vectorZ = XYZ.BasisZ * offsetZ;
 
                 beamPoints.Add(point + vectorX + vectorZ);
@@ -301,6 +306,8 @@ namespace SafetyBarriers
                     curAfterMiddle += postsStep;
                 }
             }
+
+            parameters = parameters.OrderBy(p => p).ToList();
 
             return parameters;
         }
