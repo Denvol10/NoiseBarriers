@@ -141,53 +141,48 @@ namespace SafetyBarriers.Models
 
         public bool IntersectAndGetParameter(Curve curve, out double parameter)
         {
-            string resultPath = @"O:\Revit Infrastructure Tools\SafetyBarriers\SafetyBarriers\result.txt";
-
             parameter = 0;
             XYZ basePoint = null;
 
-            using (StreamWriter sw = new StreamWriter(resultPath, false, Encoding.Default))
+            foreach (var line in ParametricLines)
             {
-                foreach (var line in ParametricLines)
+                XYZ startPoint = line.Line.GetEndPoint(0);
+                XYZ endPoint = line.Line.GetEndPoint(1);
+
+                XYZ baseStartPoint = new XYZ(startPoint.X, startPoint.Y, 0);
+                XYZ baseEndPoint = new XYZ(endPoint.X, endPoint.Y, 0);
+
+                Line baseLine = Line.CreateBound(baseStartPoint, baseEndPoint);
+
+                var result = new IntersectionResultArray();
+                var compResult = baseLine.Intersect(curve, out result);
+                if (compResult == SetComparisonResult.Overlap)
                 {
-                    XYZ startPoint = line.Line.GetEndPoint(0);
-                    XYZ endPoint = line.Line.GetEndPoint(1);
-
-                    XYZ baseStartPoint = new XYZ(startPoint.X, startPoint.Y, 0);
-                    XYZ baseEndPoint = new XYZ(endPoint.X, endPoint.Y, 0);
-
-                    Line baseLine = Line.CreateBound(baseStartPoint, baseEndPoint);
-
-                    var result = new IntersectionResultArray();
-                    var compResult = baseLine.Intersect(curve, out result);
-                    if (compResult == SetComparisonResult.Overlap)
+                    foreach (var elem in result)
                     {
-                        foreach (var elem in result)
+                        if (elem is IntersectionResult interResult)
                         {
-                            if (elem is IntersectionResult interResult)
-                            {
-                                basePoint = interResult.XYZPoint;
-                            }
+                            basePoint = interResult.XYZPoint;
                         }
-
-                        Line verticalLine = Line.CreateUnbound(basePoint, XYZ.BasisZ);
-
-                        var intersectionResult = new IntersectionResultArray();
-                        var comparResult = line.Line.Intersect(verticalLine, out intersectionResult);
-                        if (comparResult == SetComparisonResult.Overlap)
-                        {
-                            foreach (var elem in intersectionResult)
-                            {
-                                if (elem is IntersectionResult res)
-                                {
-                                    double normalizedParameter = line.Line.ComputeNormalizedParameter(res.UVPoint.U);
-                                    parameter = line.Start + normalizedParameter * line.Line.Length;
-                                }
-                            }
-                        }
-
-                        return true;
                     }
+
+                    Line verticalLine = Line.CreateUnbound(basePoint, XYZ.BasisZ);
+
+                    var intersectionResult = new IntersectionResultArray();
+                    var comparResult = line.Line.Intersect(verticalLine, out intersectionResult);
+                    if (comparResult == SetComparisonResult.Overlap)
+                    {
+                        foreach (var elem in intersectionResult)
+                        {
+                            if (elem is IntersectionResult res)
+                            {
+                                double normalizedParameter = line.Line.ComputeNormalizedParameter(res.UVPoint.U);
+                                parameter = line.Start + normalizedParameter * line.Line.Length;
+                            }
+                        }
+                    }
+
+                    return true;
                 }
             }
 
