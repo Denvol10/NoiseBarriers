@@ -60,7 +60,6 @@
     <Compile Include="Infrastructure\RevitCommand.cs" />
     <Compile Include="Models\Filters\DirectShapeFilter.cs" />
     <Compile Include="Models\ParametricPolyLine.cs" />
-    <Compile Include="Models\PolyCurve.cs" />
     <Compile Include="Models\RevitFamilyUtils.cs" />
     <Compile Include="Models\RevitGeometryUtils.cs" />
     <Compile Include="Models\RevitModelForfard.cs" />

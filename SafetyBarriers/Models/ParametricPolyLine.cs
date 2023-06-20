@@ -1,9 +1,11 @@
 ﻿using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SafetyBarriers.Models
 {
@@ -12,6 +14,7 @@ namespace SafetyBarriers.Models
         public List<Line> Lines { get; set; }
         public List<Line> LinesOnPlane { get; set; }
         public List<(Line Line, double Start, double Finish)> ParametricPlaneLines { get; set; }
+        public List<(Line Line, double Start, double Finish)> ParametricLines { get; set; }
 
         public ParametricPolyLine(IEnumerable<Line> lines)
         {
@@ -88,21 +91,37 @@ namespace SafetyBarriers.Models
                 LinesOnPlane.Add(Line.CreateBound(startPointOnPlane, finishPointOnPlane));
             }
 
-            double length = LinesOnPlane.Select(l => l.Length).Sum();
-            double restOfLength = length;
+            double lengthPlaneLines = LinesOnPlane.Select(l => l.Length).Sum();
+            double restOfLengthPlaneLines = lengthPlaneLines;
 
             ParametricPlaneLines = new List<(Line Line, double Start, double Finish)>();
 
             foreach (var line in LinesOnPlane)
             {
-                ParametricPlaneLines.Add((line, length - restOfLength, length - restOfLength + line.Length));
+                ParametricPlaneLines.Add((line, lengthPlaneLines - restOfLengthPlaneLines, lengthPlaneLines - restOfLengthPlaneLines + line.Length));
+                restOfLengthPlaneLines = restOfLengthPlaneLines - line.Length;
+            }
+
+            double lengthLines = Lines.Select(l => l.Length).Sum();
+            double restOfLength = lengthLines;
+
+            ParametricLines = new List<(Line Line, double Start, double Finish)>();
+
+            foreach (var line in Lines)
+            {
+                ParametricLines.Add((line, lengthLines - restOfLength, lengthLines - restOfLength + line.Length));
                 restOfLength = restOfLength - line.Length;
             }
         }
 
-        public bool Intersect(Curve curve, out double parameter)
+        public bool Intersect(Curve curve, out double planeParameter, out double polylineParameter)
         {
-            parameter = 0;
+            string resultPath = @"O:\Revit Infrastructure Tools\SafetyBarriers\SafetyBarriers\result.txt";
+
+            planeParameter = 0;
+            polylineParameter = 0;
+            XYZ basePoint = null;
+
             foreach (var planeLine in ParametricPlaneLines)
             {
                 var result = new IntersectionResultArray();
@@ -114,7 +133,8 @@ namespace SafetyBarriers.Models
                         if (elem is IntersectionResult interResult)
                         {
                             double normalizedParameter = planeLine.Line.ComputeNormalizedParameter(interResult.UVPoint.U);
-                            parameter = planeLine.Start + normalizedParameter * planeLine.Line.Length;
+                            planeParameter = planeLine.Start + normalizedParameter * planeLine.Line.Length;
+                            basePoint = interResult.XYZPoint;
                         }
                     }
 
@@ -122,10 +142,12 @@ namespace SafetyBarriers.Models
                 }
             }
 
+            
+
             return false;
         }
 
-        public XYZ GetPointOnPolyLine(double parameter, out Line targetLine)
+        public XYZ GetPointOnPolyLinePlaneParameter(double parameter, out Line targetLine)
         {
             XYZ point = null;
             targetLine = null;
@@ -156,15 +178,47 @@ namespace SafetyBarriers.Models
                     }
                 }
             }
+            return null;
+        }
+
+        public XYZ GetPointOnPolyLine(double parameter, out Line targetLine)
+        {
+            XYZ point = null;
+            targetLine = null;
+
+            foreach (var line in ParametricLines)
+            {
+                if (line.Start <= parameter && line.Finish >= parameter)
+                {
+                    targetLine = line.Line;
+                    double normalized = (parameter - line.Start) / (line.Finish - line.Start);
+                    point = line.Line.Evaluate(normalized, true);
+
+                    return point;
+                }
+            }
 
             return null;
         }
 
         public Plane GetPlaneOnPolyLine(double parameter)
         {
+            XYZ originPoint = null;
             Line targetLine = null;
-            XYZ originPoint = GetPointOnPolyLine(parameter, out targetLine);
+
+            foreach (var line in ParametricLines)
+            {
+                if (line.Start <= parameter && line.Finish >= parameter)
+                {
+                    targetLine = line.Line;
+                    double normalized = (parameter - line.Start) / (line.Finish - line.Start);
+                    originPoint = line.Line.Evaluate(normalized, true);
+                }
+
+            }
+
             XYZ normal = (targetLine.GetEndPoint(1) - targetLine.GetEndPoint(0)).Normalize();
+
             Plane plane = Plane.CreateByNormalAndOrigin(normal, originPoint);
 
             return plane;

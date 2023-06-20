@@ -10,7 +10,6 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using Autodesk.Revit.DB.Architecture;
 using System.Collections.ObjectModel;
-using BridgeDeck.Models;
 using SafetyBarriers.Models;
 using System.IO;
 using System.Windows.Controls;
@@ -98,12 +97,20 @@ namespace SafetyBarriers
         }
         #endregion
 
-        #region Параметр границы барьерного ограждения 1
-        private double _boundParameter1;
+        #region Параметр стоек границы барьерного ограждения 1
+        private double _boundPostParameter1;
         #endregion
 
-        #region Параметр границы барьерного ограждения 2
-        private double _boundParameter2;
+        #region Параметр стоек границы барьерного ограждения 2
+        private double _boundPostParameter2;
+        #endregion
+
+        #region Параметр границ полотна ограждения 1
+        private double _boundBeamParameter1;
+        #endregion
+
+        #region Параметр границ полотна ограждения 2
+        private double _boundBeamParameter2;
         #endregion
 
         #region Положение стоек барьерного ограждения
@@ -117,9 +124,11 @@ namespace SafetyBarriers
         #region Получение парметров границ барьерного ограждения
         public void GetBoundParameters()
         {
-            BarrierAxis.Intersect(BoundCurve1, out _boundParameter1);
+            BarrierAxis.Intersect(BoundCurve1, out _boundPostParameter1, out _);
+            BarrierAxis.Intersect(BoundCurve2, out _boundPostParameter2, out _);
 
-            BarrierAxis.Intersect(BoundCurve2, out _boundParameter2);
+            BarrierAxis.Intersect(BoundCurve1, out _boundBeamParameter1, out _);
+            BarrierAxis.Intersect(BoundCurve2, out _boundBeamParameter2, out _);
         }
         #endregion
 
@@ -129,12 +138,12 @@ namespace SafetyBarriers
                                               bool isIncludeStart,
                                               bool isIncludeFinish)
         {
-            var pointParameters = GenerateParameters(_boundParameter1, _boundParameter2, 2.5, alignment, isIncludeStart, isIncludeFinish);
+            var pointParameters = GenerateParameters(_boundPostParameter1, _boundPostParameter2, 2.5, alignment, isIncludeStart, isIncludeFinish);
 
             foreach (double parameter in pointParameters)
             {
                 Line targetLine;
-                XYZ point = BarrierAxis.GetPointOnPolyLine(parameter, out targetLine);
+                XYZ point = BarrierAxis.GetPointOnPolyLinePlaneParameter(parameter, out targetLine);
                 XYZ lineVector = targetLine.GetEndPoint(0) - targetLine.GetEndPoint(1);
                 double rotationAngle = lineVector.AngleTo(XYZ.BasisY);
                 rotationAngle = RotatePost(rotationAngle, lineVector, isRotateOn180);
@@ -146,23 +155,46 @@ namespace SafetyBarriers
         #region Получения положения полотна барьерного ограждения
         public void GetLocationBeamFamilyInstances(string alignment, bool isIncludeStart, bool isIncludeFinish)
         {
-            var pointParameters = GenerateParameters(_boundParameter1, _boundParameter2, 3, alignment, isIncludeStart, isIncludeFinish);
+            var pointParameters = GenerateParameters(_boundBeamParameter1, _boundBeamParameter2, 3, alignment, isIncludeStart, isIncludeFinish);
             var beamPoints = new List<XYZ>();
 
-            foreach (double parameter in pointParameters)
+            string resultPath = @"O:\Revit Infrastructure Tools\SafetyBarriers\SafetyBarriers\result.txt";
+
+            using (StreamWriter sw = new StreamWriter(resultPath, false, Encoding.Default))
             {
-                Plane plane = BarrierAxis.GetPlaneOnPolyLine(parameter);
-                if (plane.XVec.Z == -1 || plane.XVec.Z == 1)
+
+                foreach (double parameter in pointParameters)
                 {
-                    plane = Plane.CreateByOriginAndBasis(plane.Origin, plane.YVec, plane.XVec);
+                    double offsetX = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
+                    double offsetZ = UnitUtils.ConvertToInternalUnits(1.5, UnitTypeId.Meters);
+
+                    Line targetLine;
+                    XYZ point = BarrierAxis.GetPointOnPolyLine(parameter, out targetLine);
+                    XYZ normal = targetLine.GetEndPoint(0) - targetLine.GetEndPoint(1);
+
+                    XYZ vectorX = normal.CrossProduct(XYZ.BasisZ).Normalize() * offsetX;
+                    XYZ vectorZ = XYZ.BasisZ * offsetZ;
+
+                    //Plane plane = BarrierAxis.GetPlaneOnPolyLine(parameter);
+
+                    //sw.WriteLine(plane.XVec);
+                    //if (plane.XVec.Z != 0)
+                    //{
+                    //    plane = Plane.CreateByOriginAndBasis(plane.Origin, plane.YVec, plane.XVec);
+                    //}
+
+                    //double offsetX = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
+                    //double offsetZ = UnitUtils.ConvertToInternalUnits(1.5, UnitTypeId.Meters);
+                    //XYZ vectorX = MirrorBeam(plane, offsetX);
+                    //XYZ vectorZ = plane.YVec.Normalize() * offsetZ;
+                    //if (vectorZ.Z < 0)
+                    //{
+                    //    vectorZ = vectorZ.Negate();
+                    //}
+
+                    beamPoints.Add(point + vectorX + vectorZ);
                 }
-
-                double offsetX = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
-                XYZ vectorX = MirrorBeam(plane, offsetX);
-
-                beamPoints.Add(plane.Origin + vectorX);
             }
-
             var linePoints = GetPairs(beamPoints);
 
             foreach (var points in linePoints)
