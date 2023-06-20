@@ -158,43 +158,21 @@ namespace SafetyBarriers
             var pointParameters = GenerateParameters(_boundBeamParameter1, _boundBeamParameter2, 3, alignment, isIncludeStart, isIncludeFinish);
             var beamPoints = new List<XYZ>();
 
-            string resultPath = @"O:\Revit Infrastructure Tools\SafetyBarriers\SafetyBarriers\result.txt";
-
-            using (StreamWriter sw = new StreamWriter(resultPath, false, Encoding.Default))
+            foreach (double parameter in pointParameters)
             {
+                double offsetX = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
+                double offsetZ = UnitUtils.ConvertToInternalUnits(1.5, UnitTypeId.Meters);
 
-                foreach (double parameter in pointParameters)
-                {
-                    double offsetX = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
-                    double offsetZ = UnitUtils.ConvertToInternalUnits(1.5, UnitTypeId.Meters);
+                Line targetLine;
+                XYZ point = BarrierAxis.GetPointOnPolyLine(parameter, out targetLine);
+                XYZ normal = targetLine.GetEndPoint(0) - targetLine.GetEndPoint(1);
 
-                    Line targetLine;
-                    XYZ point = BarrierAxis.GetPointOnPolyLine(parameter, out targetLine);
-                    XYZ normal = targetLine.GetEndPoint(0) - targetLine.GetEndPoint(1);
+                XYZ vectorX = normal.CrossProduct(XYZ.BasisZ).Normalize() * offsetX;
+                XYZ vectorZ = XYZ.BasisZ * offsetZ;
 
-                    XYZ vectorX = normal.CrossProduct(XYZ.BasisZ).Normalize() * offsetX;
-                    XYZ vectorZ = XYZ.BasisZ * offsetZ;
-
-                    //Plane plane = BarrierAxis.GetPlaneOnPolyLine(parameter);
-
-                    //sw.WriteLine(plane.XVec);
-                    //if (plane.XVec.Z != 0)
-                    //{
-                    //    plane = Plane.CreateByOriginAndBasis(plane.Origin, plane.YVec, plane.XVec);
-                    //}
-
-                    //double offsetX = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
-                    //double offsetZ = UnitUtils.ConvertToInternalUnits(1.5, UnitTypeId.Meters);
-                    //XYZ vectorX = MirrorBeam(plane, offsetX);
-                    //XYZ vectorZ = plane.YVec.Normalize() * offsetZ;
-                    //if (vectorZ.Z < 0)
-                    //{
-                    //    vectorZ = vectorZ.Negate();
-                    //}
-
-                    beamPoints.Add(point + vectorX + vectorZ);
-                }
+                beamPoints.Add(point + vectorX + vectorZ);
             }
+
             var linePoints = GetPairs(beamPoints);
 
             foreach (var points in linePoints)
