@@ -12,6 +12,7 @@ using Autodesk.Revit.DB.Architecture;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using SafetyBarriers.Infrastructure;
+using SafetyBarriers.Models;
 
 namespace SafetyBarriers.ViewModels
 {
@@ -146,6 +147,25 @@ namespace SafetyBarriers.ViewModels
         }
         #endregion
 
+        #region Список полотен ограждения
+        private ObservableCollection<BeamSetup> _beamCollection;
+        public ObservableCollection<BeamSetup> BeamCollection
+        {
+            get => _beamCollection;
+            set => Set(ref _beamCollection, value);
+        }
+
+        #endregion
+
+        #region Выбранное полотно ограждения
+        private BeamSetup _selectedBeam;
+        public BeamSetup SelectedBeam
+        {
+            get => _selectedBeam;
+            set => Set(ref _selectedBeam, value);
+        }
+        #endregion
+
         #region Команды
 
         #region Получение оси барьерного ограждения
@@ -199,6 +219,46 @@ namespace SafetyBarriers.ViewModels
         }
         #endregion
 
+        #region Добавление полотна ограждения в список
+        public ICommand AddBeamSetupCommand { get; }
+        
+        private void OnAddBeamSetupCommandExecuted(object parameter)
+        {
+            var newBeamSetup = new BeamSetup()
+            {
+                OffsetX = 0.3,
+                OffsetZ = 0.5
+            };
+
+            BeamCollection.Add(newBeamSetup);
+        }
+
+        private bool CanAddBeamSetupCommandExecute(object parameter)
+        {
+            return true;
+        }
+        #endregion
+
+        #region Удаление полотна ограждения из списка
+        public ICommand DeleteBeamSetupCommand { get; }
+
+        private void OnDeleteBeamSetupCommandExecuted(object parameter)
+        {
+            var lastBeamSetup = BeamCollection.LastOrDefault();
+
+            if(!(lastBeamSetup is null))
+            {
+                BeamCollection.Remove(lastBeamSetup);
+            }
+        }
+
+        private bool CanDeleteBeamSetupCommandExecute(object parameter)
+        {
+            //return parameter is BeamSetup beam && BeamCollection.Contains(beam);
+            return true;
+        }
+        #endregion
+
         #region Создание барьерного ограждения
         public ICommand CreateSafetyBarrierCommand { get; }
 
@@ -240,12 +300,22 @@ namespace SafetyBarriers.ViewModels
 
             SelectedAlignmentSafityBarrier = "Начало";
 
+            BeamCollection = new ObservableCollection<BeamSetup>()
+            {
+                new BeamSetup() {OffsetX = 0.3, OffsetZ = 0.7, FamilyAndSymbolName = "Семейство ограждения"}
+            };
+
+
             #region Команды
             GetBarrierAxisCommand = new LambdaCommand(OnGetBarrierAxisCommandExecuted, CanGetBarrierAxisCommandExecute);
 
             GetBoundCurve1Command = new LambdaCommand(OnGetBoundCurve1CommandExecuted, CanGetBoundCurve1CommandExecute);
 
             GetBoundCurve2Command = new LambdaCommand(OnGetBoundCurve2CommandExecuted, CanGetBoundCurve2CommandExecute);
+
+            AddBeamSetupCommand = new LambdaCommand(OnAddBeamSetupCommandExecuted, CanAddBeamSetupCommandExecute);
+
+            DeleteBeamSetupCommand = new LambdaCommand(OnDeleteBeamSetupCommandExecuted, CanDeleteBeamSetupCommandExecute);
 
             CreateSafetyBarrierCommand = new LambdaCommand(OnCreateSafetyBarrierCommandExecuted, CanCreateSafetyBarrierCommandExecute);
             #endregion

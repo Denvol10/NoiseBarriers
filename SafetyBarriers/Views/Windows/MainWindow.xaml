@@ -7,8 +7,8 @@
         xmlns:local="clr-namespace:SafetyBarriers"
         mc:Ignorable="d"
         Title="{Binding Title}"
-        Height="450"
-        Width="350"
+        Height="500"
+        Width="700"
         Background="#f0f0f0"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
@@ -78,86 +78,121 @@
                     Value="Center" />
         </Style>
     </Window.Resources>
-    <StackPanel>
-        <GroupBox Header="Ось барьерного ограждения"
-                  Style="{StaticResource BorderGroupStyle}">
-            <UniformGrid Columns="2">
-                <UniformGrid Rows="2">
-                    <TextBlock Text="Линии оси ограждения"
-                               Style="{StaticResource TextAboveButton}" />
-                    <Button Style="{StaticResource SelectButton}"
-                            Command="{Binding GetBarrierAxisCommand}" />
-                </UniformGrid>
-                <TextBox Text="{Binding BarrierAxisElemIds, Mode=OneWay}"
-                         Style="{StaticResource SelectedItemsBox}" />
-            </UniformGrid>
-        </GroupBox>
-        <GroupBox Header="Границы барьерного ограждения"
-                  Style="{StaticResource BorderGroupStyle}">
-            <UniformGrid Rows="2">
+    <UniformGrid Columns="2">
+        <StackPanel>
+            <GroupBox Header="Ось барьерного ограждения"
+                      Style="{StaticResource BorderGroupStyle}">
                 <UniformGrid Columns="2">
                     <UniformGrid Rows="2">
-                        <TextBlock Text="Линия границы 1"
+                        <TextBlock Text="Линии оси ограждения"
                                    Style="{StaticResource TextAboveButton}" />
                         <Button Style="{StaticResource SelectButton}"
-                                Command="{Binding GetBoundCurve1Command}" />
+                                Command="{Binding GetBarrierAxisCommand}" />
                     </UniformGrid>
-                    <TextBox Style="{StaticResource SelectedItemsBox}"
-                             Text="{Binding BoundCurve1, Mode=OneWay}" />
+                    <TextBox Text="{Binding BarrierAxisElemIds, Mode=OneWay}"
+                             Style="{StaticResource SelectedItemsBox}" />
                 </UniformGrid>
-                <UniformGrid Columns="2"
-                             Margin="0,5,0,0">
-                    <UniformGrid Rows="2">
-                        <TextBlock Text="Линия границы 2"
-                                   Style="{StaticResource TextAboveButton}" />
-                        <Button Style="{StaticResource SelectButton}"
-                                Command="{Binding GetBoundCurve2Command}" />
-                    </UniformGrid>
-                    <TextBox Style="{StaticResource SelectedItemsBox}"
-                             Text="{Binding BoundCurve2, Mode=OneWay}" />
-                </UniformGrid>
-            </UniformGrid>
-        </GroupBox>
-        <GroupBox Header="Стойки барьерного ограждения"
-                  Style="{StaticResource BorderGroupStyle}">
-            <UniformGrid Columns="2">
-                <UniformGrid Rows="4">
-                    <TextBlock Text="Стойка"
-                               Style="{StaticResource TextAboveButton}" />
-                    <ComboBox Style="{StaticResource ComboBoxStyle}"
-                              Margin="0,2,0,0"
-                              ItemsSource="{Binding GenericModelFamilySymbols}"
-                              SelectedItem="{Binding PostFamilySymbol}" />
-                    <TextBlock Text="Выравнивание ограждения"
-                               Style="{StaticResource TextAboveButton}" />
-                    <ComboBox Style="{StaticResource ComboBoxStyle}"
-                              ItemsSource="{Binding AlignmentSafityBarrier}"
-                              SelectedItem="{Binding SelectedAlignmentSafityBarrier}" />
-                </UniformGrid>
-                <UniformGrid Rows="4">
-                    <CheckBox Content="Развернуть ограждение"
-                              IsChecked="{Binding IsRotateOn180}" />
-                    <CheckBox Content="Начальная стойка"
-                              IsChecked="{Binding IsIncludeStartPost}" />
-                    <CheckBox Content="Конечная стойка"
-                              IsChecked="{Binding IsIncludeFinishPost}" />
-                    <Button Style="{StaticResource SelectButton}"
-                            Content="Создать"
-                            Command="{Binding CreateSafetyBarrierCommand}" />
-                </UniformGrid>
-            </UniformGrid>
-        </GroupBox>
-        <GroupBox Header="Полотно ограждения"
-                  Style="{StaticResource BorderGroupStyle}">
-            <UniformGrid Columns="2">
+            </GroupBox>
+            <GroupBox Header="Границы барьерного ограждения"
+                      Style="{StaticResource BorderGroupStyle}">
                 <UniformGrid Rows="2">
-                    <TextBlock Text="Полотно ограждения"
-                               Style="{StaticResource TextAboveButton}" />
-                    <ComboBox Style="{StaticResource ComboBoxStyle}"
-                              ItemsSource="{Binding BeamFamilySymbols}"
-                              SelectedItem="{Binding SelectedBeamFamilySymbol}" />
+                    <UniformGrid Columns="2">
+                        <UniformGrid Rows="2">
+                            <TextBlock Text="Линия границы 1"
+                                       Style="{StaticResource TextAboveButton}" />
+                            <Button Style="{StaticResource SelectButton}"
+                                    Command="{Binding GetBoundCurve1Command}" />
+                        </UniformGrid>
+                        <TextBox Style="{StaticResource SelectedItemsBox}"
+                                 Text="{Binding BoundCurve1, Mode=OneWay}" />
+                    </UniformGrid>
+                    <UniformGrid Columns="2"
+                                 Margin="0,5,0,0">
+                        <UniformGrid Rows="2">
+                            <TextBlock Text="Линия границы 2"
+                                       Style="{StaticResource TextAboveButton}" />
+                            <Button Style="{StaticResource SelectButton}"
+                                    Command="{Binding GetBoundCurve2Command}" />
+                        </UniformGrid>
+                        <TextBox Style="{StaticResource SelectedItemsBox}"
+                                 Text="{Binding BoundCurve2, Mode=OneWay}" />
+                    </UniformGrid>
                 </UniformGrid>
-            </UniformGrid>
+            </GroupBox>
+            <GroupBox Header="Стойки барьерного ограждения"
+                      Style="{StaticResource BorderGroupStyle}">
+                <UniformGrid Columns="2">
+                    <UniformGrid Rows="4">
+                        <TextBlock Text="Стойка"
+                                   Style="{StaticResource TextAboveButton}" />
+                        <ComboBox Style="{StaticResource ComboBoxStyle}"
+                                  Margin="0,2,0,0"
+                                  ItemsSource="{Binding GenericModelFamilySymbols}"
+                                  SelectedItem="{Binding PostFamilySymbol}" />
+                        <TextBlock Text="Выравнивание ограждения"
+                                   Style="{StaticResource TextAboveButton}" />
+                        <ComboBox Style="{StaticResource ComboBoxStyle}"
+                                  ItemsSource="{Binding AlignmentSafityBarrier}"
+                                  SelectedItem="{Binding SelectedAlignmentSafityBarrier}" />
+                    </UniformGrid>
+                    <UniformGrid Rows="4">
+                        <CheckBox Content="Развернуть ограждение"
+                                  IsChecked="{Binding IsRotateOn180}" />
+                        <CheckBox Content="Начальная стойка"
+                                  IsChecked="{Binding IsIncludeStartPost}" />
+                        <CheckBox Content="Конечная стойка"
+                                  IsChecked="{Binding IsIncludeFinishPost}" />
+                        <Button Style="{StaticResource SelectButton}"
+                                Content="Создать"
+                                Command="{Binding CreateSafetyBarrierCommand}" />
+                    </UniformGrid>
+                </UniformGrid>
+            </GroupBox>
+            <GroupBox Header="Полотно ограждения"
+                      Style="{StaticResource BorderGroupStyle}">
+                <UniformGrid Columns="2">
+                    <UniformGrid Rows="2">
+                        <TextBlock Text="Полотно ограждения"
+                                   Style="{StaticResource TextAboveButton}" />
+                        <ComboBox Style="{StaticResource ComboBoxStyle}"
+                                  ItemsSource="{Binding BeamFamilySymbols}"
+                                  SelectedItem="{Binding SelectedBeamFamilySymbol}" />
+                    </UniformGrid>
+                </UniformGrid>
+            </GroupBox>
+        </StackPanel>
+        <GroupBox Header="Полотно">
+            <StackPanel>
+                <ScrollViewer Height="100"
+                              VerticalAlignment="Top">
+                    <DataGrid ItemsSource="{Binding BeamCollection}"
+                              SelectedItem="{Binding SelectedBeam}"
+                              CanUserAddRows="False"
+                              AutoGenerateColumns="False"
+                              GridLinesVisibility="Vertical">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Положение по X, м"
+                                                Binding="{Binding OffsetX}"
+                                                Width="Auto" />
+                            <DataGridTextColumn Header="Положение по Z, м"
+                                                Binding="{Binding OffsetZ}"
+                                                Width="Auto" />
+                            <DataGridTextColumn Header="Семейство"
+                                                Binding="{Binding FamilyAndSymbolName}"
+                                                Width="*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+                <UniformGrid Columns="2">
+                    <Button Style="{StaticResource SelectButton}"
+                            Content="Добавить" 
+                            Command="{Binding AddBeamSetupCommand}"/>
+                    <Button Style="{StaticResource SelectButton}"
+                            Content="Удалить"
+                            Command="{Binding DeleteBeamSetupCommand}"
+                            CommandParameter="{Binding SelectedBeam}"/>
+                </UniformGrid>
+            </StackPanel>
         </GroupBox>
-    </StackPanel>
+    </UniformGrid>
 </Window>
