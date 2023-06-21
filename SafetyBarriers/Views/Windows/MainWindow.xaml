@@ -46,6 +46,14 @@
                 </Style>
             </Style.Resources>
         </Style>
+        <Style TargetType="DataGridCell">
+            <Style.Setters>
+                <Setter Property="TextBlock.TextAlignment"
+                        Value="Center" />
+                <Setter Property="TextBlock.VerticalAlignment"
+                        Value="Center" />
+            </Style.Setters>
+        </Style>
         <Style x:Key="SelectedItemsBox"
                TargetType="TextBox">
             <Setter Property="IsReadOnly"
@@ -165,32 +173,33 @@
         </StackPanel>
         <GroupBox Header="Полотна ограждения">
             <StackPanel>
-                <ScrollViewer Height="100"
-                              VerticalAlignment="Top">
-                    <DataGrid x:Name="datagrid"
-                              ItemsSource="{Binding BeamCollection}"
-                              CanUserAddRows="False"
-                              AutoGenerateColumns="False"
-                              GridLinesVisibility="Vertical">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="X, м"
-                                                Binding="{Binding OffsetX}"
-                                                Width="40" />
-                            <DataGridTextColumn Header="Z, м"
-                                                Binding="{Binding OffsetZ}"
-                                                Width="40" />
-                            <DataGridTemplateColumn Header="Семейство">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <ComboBox ItemsSource="{Binding DataContext.BeamFamilySymbols, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                  SelectedValue="{Binding FamilyAndSymbolName, UpdateSourceTrigger=PropertyChanged}"
-                                                  Width="200" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </ScrollViewer>
+                <DataGrid x:Name="datagrid"
+                          ItemsSource="{Binding BeamCollection}"
+                          CanUserAddRows="False"
+                          AutoGenerateColumns="False"
+                          GridLinesVisibility="Vertical"
+                          VerticalGridLinesBrush="DarkGray"
+                          AlternatingRowBackground="LightGray"
+                          Height="150"
+                          RowHeight="24">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="X, м"
+                                            Binding="{Binding OffsetX}"
+                                            Width="40" />
+                        <DataGridTextColumn Header="Z, м"
+                                            Binding="{Binding OffsetZ}"
+                                            Width="40" />
+                        <DataGridTemplateColumn Header="Семейство"
+                                                Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox ItemsSource="{Binding DataContext.BeamFamilySymbols, RelativeSource={RelativeSource AncestorType=Window}}"
+                                              SelectedValue="{Binding FamilyAndSymbolName, UpdateSourceTrigger=PropertyChanged}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
                 <UniformGrid Columns="2">
                     <Button Style="{StaticResource SelectButton}"
                             Content="Добавить"
