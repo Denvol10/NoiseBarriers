@@ -254,7 +254,18 @@ namespace SafetyBarriers.ViewModels
 
         private bool CanDeleteBeamSetupCommandExecute(object parameter)
         {
-            //return parameter is BeamSetup beam && BeamCollection.Contains(beam);
+            return true;
+        }
+        #endregion
+
+        #region Тест команда печати списка полотен
+        public ICommand PrintBeamsCommand { get; }
+        private void OnPrintBeamsCommandExecuted(object parameter)
+        {
+            RevitModel.PrintBeamCollection(BeamCollection);
+        }
+        private bool CanPrintBeamsCommandExecute(object parameter)
+        {
             return true;
         }
         #endregion
@@ -302,7 +313,7 @@ namespace SafetyBarriers.ViewModels
 
             BeamCollection = new ObservableCollection<BeamSetup>()
             {
-                new BeamSetup() {OffsetX = 0.3, OffsetZ = 0.7, FamilyAndSymbolName = "Семейство ограждения"}
+                new BeamSetup() {OffsetX = 0.3, OffsetZ = 0.7}
             };
 
 
@@ -316,6 +327,8 @@ namespace SafetyBarriers.ViewModels
             AddBeamSetupCommand = new LambdaCommand(OnAddBeamSetupCommandExecuted, CanAddBeamSetupCommandExecute);
 
             DeleteBeamSetupCommand = new LambdaCommand(OnDeleteBeamSetupCommandExecuted, CanDeleteBeamSetupCommandExecute);
+
+            PrintBeamsCommand = new LambdaCommand(OnPrintBeamsCommandExecuted, CanPrintBeamsCommandExecute);
 
             CreateSafetyBarrierCommand = new LambdaCommand(OnCreateSafetyBarrierCommandExecuted, CanCreateSafetyBarrierCommandExecute);
             #endregion

@@ -188,6 +188,20 @@ namespace SafetyBarriers
         }
         #endregion
 
+        #region Тест печать списка с полотнами
+        public void PrintBeamCollection(IEnumerable<BeamSetup> beams)
+        {
+            string resultPath = @"O:\Revit Infrastructure Tools\SafetyBarriers\SafetyBarriers\result.txt";
+            using(StreamWriter sw = new StreamWriter(resultPath, false, Encoding.Default))
+            {
+                foreach(var beam in beams)
+                {
+                    sw.WriteLine($"{beam.OffsetX} | {beam.OffsetZ} | {beam.FamilyAndSymbolName}");
+                }
+            }
+        }
+        #endregion
+
         #region Создание барьерного ограждения
         public void CreateSafetyBarrier(string postFamilyAndSymbolName, string beamFamilyAndSymbolName)
         {

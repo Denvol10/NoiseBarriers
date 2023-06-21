@@ -1,9 +1,11 @@
 ﻿<Window x:Class="SafetyBarriers.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:vm="clr-namespace:SafetyBarriers.ViewModels"
+        xmlns:m="clr-namespace:SafetyBarriers.Models"
         xmlns:local="clr-namespace:SafetyBarriers"
         mc:Ignorable="d"
         Title="{Binding Title}"
@@ -161,36 +163,47 @@
                 </UniformGrid>
             </GroupBox>
         </StackPanel>
-        <GroupBox Header="Полотно">
+        <GroupBox Header="Полотна ограждения">
             <StackPanel>
                 <ScrollViewer Height="100"
                               VerticalAlignment="Top">
-                    <DataGrid ItemsSource="{Binding BeamCollection}"
-                              SelectedItem="{Binding SelectedBeam}"
+                    <DataGrid x:Name="datagrid"
+                              ItemsSource="{Binding BeamCollection}"
                               CanUserAddRows="False"
                               AutoGenerateColumns="False"
                               GridLinesVisibility="Vertical">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Положение по X, м"
+                            <DataGridTextColumn Header="X, м"
                                                 Binding="{Binding OffsetX}"
-                                                Width="Auto" />
-                            <DataGridTextColumn Header="Положение по Z, м"
+                                                Width="40" />
+                            <DataGridTextColumn Header="Z, м"
                                                 Binding="{Binding OffsetZ}"
-                                                Width="Auto" />
-                            <DataGridTextColumn Header="Семейство"
-                                                Binding="{Binding FamilyAndSymbolName}"
-                                                Width="*" />
+                                                Width="40" />
+                            <DataGridTemplateColumn Header="Семейство">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox ItemsSource="{Binding DataContext.BeamFamilySymbols, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                  SelectedValue="{Binding FamilyAndSymbolName, UpdateSourceTrigger=PropertyChanged}"
+                                                  Width="200" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </ScrollViewer>
                 <UniformGrid Columns="2">
                     <Button Style="{StaticResource SelectButton}"
-                            Content="Добавить" 
-                            Command="{Binding AddBeamSetupCommand}"/>
+                            Content="Добавить"
+                            Command="{Binding AddBeamSetupCommand}" />
                     <Button Style="{StaticResource SelectButton}"
                             Content="Удалить"
                             Command="{Binding DeleteBeamSetupCommand}"
-                            CommandParameter="{Binding SelectedBeam}"/>
+                            CommandParameter="{Binding SelectedBeam}" />
+                </UniformGrid>
+                <UniformGrid Columns="2">
+                    <Button Style="{StaticResource SelectButton}"
+                            Content="Печать"
+                            Command="{Binding PrintBeamsCommand}" />
                 </UniformGrid>
             </StackPanel>
         </GroupBox>

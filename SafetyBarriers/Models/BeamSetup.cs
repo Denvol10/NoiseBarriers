@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SafetyBarriers.Models
 {
-    internal class BeamSetup
+    public class BeamSetup
     {
         public double OffsetX { get; set; }
 
