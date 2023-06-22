@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:SafetyBarriers"
         mc:Ignorable="d"
         Title="{Binding Title}"
-        Height="500"
+        Height="323"
         Width="700"
         Background="#f0f0f0"
         WindowStartupLocation="CenterScreen"
@@ -180,7 +180,7 @@
                               GridLinesVisibility="Vertical"
                               VerticalGridLinesBrush="DarkGray"
                               AlternatingRowBackground="LightGray"
-                              Height="150"
+                              Height="109"
                               RowHeight="24">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="X, м"
