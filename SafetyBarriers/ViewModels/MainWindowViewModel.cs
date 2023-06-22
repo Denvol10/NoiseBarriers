@@ -66,9 +66,9 @@ namespace SafetyBarriers.ViewModels
         #endregion
 
         #region Список семейств категории обобщенной модели
-        private ObservableCollection<string> _genericModelFamilySymbols;
+        private ObservableCollection<FamilySymbolSelector> _genericModelFamilySymbols;
 
-        public ObservableCollection<string> GenericModelFamilySymbols
+        public ObservableCollection<FamilySymbolSelector> GenericModelFamilySymbols
         {
             get => _genericModelFamilySymbols;
             set => Set(ref _genericModelFamilySymbols, value);
@@ -76,8 +76,8 @@ namespace SafetyBarriers.ViewModels
         #endregion
 
         #region Выбранный типоразмер семейства стойки
-        private string _postFamilySymbol;
-        public string PostFamilySymbol
+        private FamilySymbolSelector _postFamilySymbol;
+        public FamilySymbolSelector PostFamilySymbol
         {
             get => _postFamilySymbol;
             set => Set(ref _postFamilySymbol, value);
@@ -130,8 +130,8 @@ namespace SafetyBarriers.ViewModels
         #endregion
 
         #region Полотно ограждения
-        private ObservableCollection<string> _beamFamilySymbols;
-        public ObservableCollection<string> BeamFamilySymbols
+        private ObservableCollection<FamilySymbolSelector> _beamFamilySymbols;
+        public ObservableCollection<FamilySymbolSelector> BeamFamilySymbols
         {
             get => _beamFamilySymbols;
             set => Set(ref _beamFamilySymbols, value);
@@ -139,8 +139,8 @@ namespace SafetyBarriers.ViewModels
         #endregion
 
         #region Выбранное полотно ограждения
-        private string _selectedBeamFamilySymbol;
-        public string SelectedBeamFamilySymbol
+        private FamilySymbolSelector _selectedBeamFamilySymbol;
+        public FamilySymbolSelector SelectedBeamFamilySymbol
         {
             get => _selectedBeamFamilySymbol;
             set => Set(ref _selectedBeamFamilySymbol, value);

@@ -12,6 +12,6 @@ namespace SafetyBarriers.Models
 
         public double OffsetZ { get; set; }
 
-        public string FamilyAndSymbolName { get; set; }
+        public FamilySymbolSelector FamilyAndSymbolName { get; set; }
     }
 }

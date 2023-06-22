@@ -82,7 +82,7 @@ namespace SafetyBarriers
         #endregion
 
         #region Получение названиий семейств для стоек барьерного ограждения
-        public ObservableCollection<string> GetPostFamilySymbolNames()
+        public ObservableCollection<FamilySymbolSelector> GetPostFamilySymbolNames()
         {
             var familySymbols = RevitFamilyUtils.GetFamilySymbolNames(Doc, BuiltInCategory.OST_GenericModel);
             return familySymbols;
@@ -90,7 +90,7 @@ namespace SafetyBarriers
         #endregion
 
         #region Получение названиий семейств для полотен барьерного ограждения
-        public ObservableCollection<string> GetBeamFamilySymbolNames()
+        public ObservableCollection<FamilySymbolSelector> GetBeamFamilySymbolNames()
         {
             var familySymbols = RevitFamilyUtils.GetFamilySymbolNames(Doc, BuiltInCategory.OST_StructuralFraming);
             return familySymbols;
@@ -118,7 +118,8 @@ namespace SafetyBarriers
         #endregion
 
         #region Положение полотен барьерного ограждения
-        private List<(List<Curve> Lines, string FamilySymbol)> _beamLocations = new List<(List<Curve> Lines, string FamilySymbol)>();
+        private List<(List<Curve> Lines, FamilySymbolSelector FamilySymbol)> _beamLocations = new List<(List<Curve> Lines, 
+                                                                                                        FamilySymbolSelector FamilySymbol)>();
         #endregion
 
         #region Получение парметров границ барьерного ограждения
@@ -203,12 +204,11 @@ namespace SafetyBarriers
         #endregion
 
         #region Создание барьерного ограждения
-        public void CreateSafetyBarrier(string postFamilyAndSymbolName, string beamFamilyAndSymbolName)
+        public void CreateSafetyBarrier(FamilySymbolSelector postFamilyAndSymbolName, FamilySymbolSelector beamFamilyAndSymbolName)
         {
             FamilySymbol postFSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, postFamilyAndSymbolName);
 
             var level = new FilteredElementCollector(Doc).OfCategory(BuiltInCategory.OST_Levels).Where(e => e.Name == "Уровень 1").First() as Level;
-
 
             using (Transaction trans = new Transaction(Doc, "Created Safety Barrier"))
             {
