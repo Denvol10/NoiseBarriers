@@ -156,11 +156,9 @@ namespace SafetyBarriers
         #region Получения положения полотна барьерного ограждения
         public void GetLocationBeamFamilyInstances(bool isRotateOn180,
                                                    string alignment,
-                                                   bool isIncludeStart,
-                                                   bool isIncludeFinish,
                                                    IEnumerable<BeamSetup> beamSetups)
         {
-            var pointParameters = GenerateParameters(_boundBeamParameter1, _boundBeamParameter2, 3, alignment, isIncludeStart, isIncludeFinish);
+            var pointParameters = GenerateParameters(_boundBeamParameter1, _boundBeamParameter2, 3, alignment, true, true);
             var beamLocationsOnAxis = new List<(XYZ Point, XYZ VectorX)>();
 
             foreach (double parameter in pointParameters)
