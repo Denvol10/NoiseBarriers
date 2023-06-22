@@ -184,6 +184,15 @@ namespace SafetyBarriers.ViewModels
         }
         #endregion
 
+        #region Длина балок
+        private double _beamLength = 3.0;
+        public double BeamLength
+        {
+            get => _beamLength;
+            set => Set(ref _beamLength, value);
+        }
+        #endregion
+
         #region Команды
 
         #region Получение оси барьерного ограждения
@@ -289,7 +298,8 @@ namespace SafetyBarriers.ViewModels
                                                  PostStep);
             RevitModel.GetLocationBeamFamilyInstances(IsRotateOn180,
                                                       SelectedAlignmentSafityBarrier,
-                                                      BeamCollection);
+                                                      BeamCollection,
+                                                      BeamLength);
             RevitModel.CreateSafetyBarrier(PostFamilySymbol, IsReverseBeams);
         }
 
