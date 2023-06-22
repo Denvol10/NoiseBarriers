@@ -166,6 +166,15 @@ namespace SafetyBarriers.ViewModels
         }
         #endregion
 
+        #region Развернуть балки
+        private bool _isReverseBeams;
+        public bool IsReverseBeams
+        {
+            get => _isReverseBeams;
+            set => Set(ref _isReverseBeams, value);
+        }
+        #endregion
+
         #region Команды
 
         #region Получение оси барьерного ограждения
@@ -271,7 +280,7 @@ namespace SafetyBarriers.ViewModels
             RevitModel.GetLocationBeamFamilyInstances(IsRotateOn180,
                                                       SelectedAlignmentSafityBarrier,
                                                       BeamCollection);
-            RevitModel.CreateSafetyBarrier(PostFamilySymbol, SelectedBeamFamilySymbol);
+            RevitModel.CreateSafetyBarrier(PostFamilySymbol, IsReverseBeams);
         }
 
         public bool CanCreateSafetyBarrierCommandExecute(object parameter)

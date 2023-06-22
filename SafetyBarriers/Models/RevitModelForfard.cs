@@ -202,7 +202,7 @@ namespace SafetyBarriers
         #endregion
 
         #region Создание барьерного ограждения
-        public void CreateSafetyBarrier(FamilySymbolSelector postFamilyAndSymbolName, FamilySymbolSelector beamFamilyAndSymbolName)
+        public void CreateSafetyBarrier(FamilySymbolSelector postFamilyAndSymbolName, bool isReverseBeams)
         {
             FamilySymbol postFSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, postFamilyAndSymbolName);
 
@@ -239,6 +239,11 @@ namespace SafetyBarriers
                                                                  Autodesk.Revit.DB.Structure.StructuralType.Beam);
                         StructuralFramingUtils.DisallowJoinAtEnd(beamFamilyInstance, 0);
                         StructuralFramingUtils.DisallowJoinAtEnd(beamFamilyInstance, 1);
+
+                        if(isReverseBeams)
+                        {
+                            beamFamilyInstance.flipFacing();
+                        }
                     }
                 }
 
