@@ -254,7 +254,8 @@
                                 Content="Создать"
                                 Command="{Binding CreateSafetyBarrierCommand}" />
                         <Button Style="{StaticResource SelectButton}"
-                                Content="Отмена" />
+                                Content="Отмена" 
+                                Command="{Binding CloseWindow}"/>
                     </UniformGrid>
                 </StackPanel>
             </GroupBox>
