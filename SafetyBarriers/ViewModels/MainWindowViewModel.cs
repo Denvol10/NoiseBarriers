@@ -280,7 +280,11 @@ namespace SafetyBarriers.ViewModels
                                                  SelectedAlignmentSafityBarrier,
                                                  IsIncludeStartPost,
                                                  IsIncludeFinishPost);
-            RevitModel.GetLocationBeamFamilyInstances(IsRotateOn180, SelectedAlignmentSafityBarrier, IsIncludeStartPost, IsIncludeFinishPost);
+            RevitModel.GetLocationBeamFamilyInstances(IsRotateOn180,
+                                                      SelectedAlignmentSafityBarrier,
+                                                      IsIncludeStartPost,
+                                                      IsIncludeFinishPost,
+                                                      BeamCollection);
             RevitModel.CreateSafetyBarrier(PostFamilySymbol, SelectedBeamFamilySymbol);
         }
 

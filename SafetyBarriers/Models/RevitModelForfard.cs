@@ -118,7 +118,7 @@ namespace SafetyBarriers
         #endregion
 
         #region Положение полотен барьерного ограждения
-        private List<Curve> _beamLocations = new List<Curve>();
+        private List<(List<Curve> Lines, string FamilySymbol)> _beamLocations = new List<(List<Curve> Lines, string FamilySymbol)>();
         #endregion
 
         #region Получение парметров границ барьерного ограждения
@@ -153,37 +153,51 @@ namespace SafetyBarriers
         #endregion
 
         #region Получения положения полотна барьерного ограждения
-        public void GetLocationBeamFamilyInstances(bool isRotateOn180, string alignment, bool isIncludeStart, bool isIncludeFinish)
+        public void GetLocationBeamFamilyInstances(bool isRotateOn180,
+                                                   string alignment,
+                                                   bool isIncludeStart,
+                                                   bool isIncludeFinish,
+                                                   IEnumerable<BeamSetup> beamSetups)
         {
             var pointParameters = GenerateParameters(_boundBeamParameter1, _boundBeamParameter2, 3, alignment, isIncludeStart, isIncludeFinish);
-            var beamPoints = new List<XYZ>();
+            var beamLocationsOnAxis = new List<(XYZ Point, XYZ VectorX)>();
 
             foreach (double parameter in pointParameters)
             {
-                double offsetX = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
-                double offsetZ = UnitUtils.ConvertToInternalUnits(1.5, UnitTypeId.Meters);
-
                 Line targetLine;
                 XYZ point = BarrierAxis.GetPointOnPolyLine(parameter, out targetLine);
                 XYZ normal = targetLine.GetEndPoint(1) - targetLine.GetEndPoint(0);
 
-                XYZ vectorX = normal.CrossProduct(XYZ.BasisZ).Normalize() * offsetX;
+                XYZ vectorX = normal.CrossProduct(XYZ.BasisZ).Normalize();
                 if(isRotateOn180)
                 {
                     vectorX = vectorX.Negate();
                 }
 
-                XYZ vectorZ = XYZ.BasisZ * offsetZ;
-
-                beamPoints.Add(point + vectorX + vectorZ);
+                beamLocationsOnAxis.Add((point, vectorX));
             }
 
-            var linePoints = GetPairs(beamPoints);
-
-            foreach (var points in linePoints)
+            foreach(var beamSetup in beamSetups)
             {
-                Line beamLine = Line.CreateBound(points.Item1, points.Item2);
-                _beamLocations.Add(beamLine);
+                double offsetX = UnitUtils.ConvertToInternalUnits(beamSetup.OffsetX, UnitTypeId.Meters);
+                double offsetZ = UnitUtils.ConvertToInternalUnits(beamSetup.OffsetZ, UnitTypeId.Meters);
+
+                var beamPoints = new List<XYZ>();
+                foreach(var location in beamLocationsOnAxis)
+                {
+                    beamPoints.Add(location.Point + location.VectorX * offsetX + XYZ.BasisZ * offsetZ);
+                }
+
+                var pointLines = GetPairs(beamPoints);
+
+                var lines = new List<Curve>();
+                foreach(var points in pointLines)
+                {
+                    Line beamLine = Line.CreateBound(points.Item1, points.Item2);
+                    lines.Add(beamLine);
+                }
+
+                _beamLocations.Add((lines, beamSetup.FamilyAndSymbolName));
             }
         }
         #endregion
@@ -207,7 +221,6 @@ namespace SafetyBarriers
         {
             FamilySymbol postFSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, postFamilyAndSymbolName);
 
-            FamilySymbol beamFSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, beamFamilyAndSymbolName);
             var level = new FilteredElementCollector(Doc).OfCategory(BuiltInCategory.OST_Levels).Where(e => e.Name == "Уровень 1").First() as Level;
 
 
@@ -219,11 +232,6 @@ namespace SafetyBarriers
                     postFSymbol.Activate();
                 }
 
-                if (!beamFSymbol.IsActive)
-                {
-                    beamFSymbol.Activate();
-                }
-
                 foreach (var location in _postLocations)
                 {
                     FamilyInstance postFamilyInstance = Doc.Create.NewFamilyInstance(location.Item1, postFSymbol, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
@@ -233,12 +241,21 @@ namespace SafetyBarriers
 
                 foreach (var location in _beamLocations)
                 {
-                    FamilyInstance beamFamilyInstance = Doc.Create.NewFamilyInstance(location,
-                                                                                     beamFSymbol,
-                                                                                     level,
-                                                                                     Autodesk.Revit.DB.Structure.StructuralType.Beam);
-                    StructuralFramingUtils.DisallowJoinAtEnd(beamFamilyInstance, 0);
-                    StructuralFramingUtils.DisallowJoinAtEnd(beamFamilyInstance, 1);
+                    FamilySymbol beamFSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, location.FamilySymbol);
+                    if (!beamFSymbol.IsActive)
+                    {
+                        beamFSymbol.Activate();
+                    }
+
+                    foreach(var line in location.Lines)
+                    {
+                        FamilyInstance beamFamilyInstance = Doc.Create.NewFamilyInstance(line,
+                                                                 beamFSymbol,
+                                                                 level,
+                                                                 Autodesk.Revit.DB.Structure.StructuralType.Beam);
+                        StructuralFramingUtils.DisallowJoinAtEnd(beamFamilyInstance, 0);
+                        StructuralFramingUtils.DisallowJoinAtEnd(beamFamilyInstance, 1);
+                    }
                 }
 
                 trans.Commit();
