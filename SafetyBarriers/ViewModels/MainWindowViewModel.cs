@@ -175,6 +175,15 @@ namespace SafetyBarriers.ViewModels
         }
         #endregion
 
+        #region Шаг стоек
+        private double _postStep = 2.5;
+        public double PostStep
+        {
+            get => _postStep;
+            set => Set(ref _postStep, value);
+        }
+        #endregion
+
         #region Команды
 
         #region Получение оси барьерного ограждения
@@ -276,7 +285,8 @@ namespace SafetyBarriers.ViewModels
             RevitModel.GetLocationPostFamilyInstances(IsRotateOn180,
                                                  SelectedAlignmentSafityBarrier,
                                                  IsIncludeStartPost,
-                                                 IsIncludeFinishPost);
+                                                 IsIncludeFinishPost,
+                                                 PostStep);
             RevitModel.GetLocationBeamFamilyInstances(IsRotateOn180,
                                                       SelectedAlignmentSafityBarrier,
                                                       BeamCollection);

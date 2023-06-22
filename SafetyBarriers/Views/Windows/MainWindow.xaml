@@ -151,7 +151,8 @@
                                        HorizontalAlignment="Right"
                                        VerticalAlignment="Center"
                                        Margin="2,0,0,0" />
-                            <TextBox Width="60"
+                            <TextBox Text="{Binding PostStep}"
+                                     Width="60"
                                      Height="20"
                                      HorizontalAlignment="Center"
                                      VerticalAlignment="Center"
@@ -169,7 +170,8 @@
             </GroupBox>
         </StackPanel>
         <StackPanel>
-            <GroupBox Header="Балки ограждения" Style="{StaticResource BorderGroupStyle}">
+            <GroupBox Header="Балки ограждения"
+                      Style="{StaticResource BorderGroupStyle}">
                 <StackPanel>
                     <DataGrid x:Name="datagrid"
                               ItemsSource="{Binding BeamCollection}"
@@ -224,12 +226,13 @@
                         </DockPanel>
                         <CheckBox Content="Развернуть балки"
                                   Style="{StaticResource CheckBoxStyle}"
-                                  HorizontalAlignment="Center" 
-                                  IsChecked="{Binding IsReverseBeams}"/>
+                                  HorizontalAlignment="Center"
+                                  IsChecked="{Binding IsReverseBeams}" />
                     </UniformGrid>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="Создание ограждения" Style="{StaticResource BorderGroupStyle}">
+            <GroupBox Header="Создание ограждения"
+                      Style="{StaticResource BorderGroupStyle}">
                 <StackPanel>
                     <UniformGrid Columns="2">
                         <UniformGrid Rows="2">

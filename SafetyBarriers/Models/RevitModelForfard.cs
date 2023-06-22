@@ -137,9 +137,15 @@ namespace SafetyBarriers
         public void GetLocationPostFamilyInstances(bool isRotateOn180,
                                               string alignment,
                                               bool isIncludeStart,
-                                              bool isIncludeFinish)
+                                              bool isIncludeFinish,
+                                              double postStep)
         {
-            var pointParameters = GenerateParameters(_boundPostParameter1, _boundPostParameter2, 2.5, alignment, isIncludeStart, isIncludeFinish);
+            var pointParameters = GenerateParameters(_boundPostParameter1,
+                                                     _boundPostParameter2,
+                                                     postStep,
+                                                     alignment,
+                                                     isIncludeStart,
+                                                     isIncludeFinish);
 
             foreach (double parameter in pointParameters)
             {
