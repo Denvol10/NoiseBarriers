@@ -301,6 +301,7 @@ namespace SafetyBarriers.ViewModels
                                                       BeamCollection,
                                                       BeamLength);
             RevitModel.CreateSafetyBarrier(PostFamilySymbol, IsReverseBeams);
+            RevitCommand.mainView.Close();
         }
 
         public bool CanCreateSafetyBarrierCommandExecute(object parameter)
