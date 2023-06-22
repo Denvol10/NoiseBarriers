@@ -25,7 +25,7 @@ namespace SafetyBarriers.Models
                 foreach (var symbolId in family.GetFamilySymbolIds())
                 {
                     var familySymbol = doc.GetElement(symbolId);
-                    familySymbolNames.Add($"{family.Name}-{familySymbol.Name}");
+                    familySymbolNames.Add($"{family.Name}~{familySymbol.Name}");
                 }
             }
 
@@ -36,8 +36,8 @@ namespace SafetyBarriers.Models
         #region Получение типоразмера по имени
         public static FamilySymbol GetFamilySymbolByName(Document doc, string familyAndSymbolName)
         {
-            var familyName = familyAndSymbolName.Split('-').First();
-            var symbolName = familyAndSymbolName.Split('-').Last();
+            var familyName = familyAndSymbolName.Split('~').First();
+            var symbolName = familyAndSymbolName.Split('~').Last();
 
             Family family = new FilteredElementCollector(doc).OfClass(typeof(Family)).Where(f => f.Name == familyName).First() as Family;
             var symbolIds = family.GetFamilySymbolIds();
@@ -56,7 +56,7 @@ namespace SafetyBarriers.Models
         #region Получение семейства по имени
         public static Family GetFamilyByName(Document doc, string familyAndSymbolName)
         {
-            var familyName = familyAndSymbolName.Split('-').First();
+            var familyName = familyAndSymbolName.Split('~').First();
             Family family = new FilteredElementCollector(doc).OfClass(typeof(Family)).Where(f => f.Name == familyName).First() as Family;
 
             return family;

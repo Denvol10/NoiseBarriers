@@ -158,18 +158,6 @@
                     </UniformGrid>
                 </UniformGrid>
             </GroupBox>
-            <GroupBox Header="Полотно ограждения"
-                      Style="{StaticResource BorderGroupStyle}">
-                <UniformGrid Columns="2">
-                    <UniformGrid Rows="2">
-                        <TextBlock Text="Полотно ограждения"
-                                   Style="{StaticResource TextAboveButton}" />
-                        <ComboBox Style="{StaticResource ComboBoxStyle}"
-                                  ItemsSource="{Binding BeamFamilySymbols}"
-                                  SelectedItem="{Binding SelectedBeamFamilySymbol}" />
-                    </UniformGrid>
-                </UniformGrid>
-            </GroupBox>
         </StackPanel>
         <GroupBox Header="Полотна ограждения">
             <StackPanel>
@@ -208,11 +196,6 @@
                             Content="Удалить"
                             Command="{Binding DeleteBeamSetupCommand}"
                             CommandParameter="{Binding SelectedBeam}" />
-                </UniformGrid>
-                <UniformGrid Columns="2">
-                    <Button Style="{StaticResource SelectButton}"
-                            Content="Печать"
-                            Command="{Binding PrintBeamsCommand}" />
                 </UniformGrid>
             </StackPanel>
         </GroupBox>
