@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace SafetyBarriers.Models
+namespace NoiseBarriers.Models
 {
     internal class RevitFamilyUtils
     {

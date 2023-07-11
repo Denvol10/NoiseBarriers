@@ -10,12 +10,12 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using Autodesk.Revit.DB.Architecture;
 using System.Collections.ObjectModel;
-using SafetyBarriers.Models;
+using NoiseBarriers.Models;
 using System.IO;
 using System.Windows.Controls;
 using Autodesk.Revit.DB.Structure;
 
-namespace SafetyBarriers
+namespace NoiseBarriers
 {
     public class RevitModelForfard
     {

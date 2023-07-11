@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SafetyBarriers.Models
+namespace NoiseBarriers.Models
 {
     internal class RevitGeometryUtils
     {

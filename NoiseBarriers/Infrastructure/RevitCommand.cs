@@ -9,9 +9,9 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using Autodesk.Revit.DB.Architecture;
-using SafetyBarriers.ViewModels;
+using NoiseBarriers.ViewModels;
 
-namespace SafetyBarriers.Infrastructure
+namespace NoiseBarriers.Infrastructure
 {
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]

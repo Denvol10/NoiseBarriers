@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace SafetyBarriers.Models
+namespace NoiseBarriers.Models
 {
     public class ParametricPolyLine
     {

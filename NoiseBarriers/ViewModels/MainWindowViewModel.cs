@@ -11,10 +11,10 @@ using Autodesk.Revit.UI.Selection;
 using Autodesk.Revit.DB.Architecture;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using SafetyBarriers.Infrastructure;
-using SafetyBarriers.Models;
+using NoiseBarriers.Infrastructure;
+using NoiseBarriers.Models;
 
-namespace SafetyBarriers.ViewModels
+namespace NoiseBarriers.ViewModels
 {
     internal class MainWindowViewModel : Base.ViewModel
     {

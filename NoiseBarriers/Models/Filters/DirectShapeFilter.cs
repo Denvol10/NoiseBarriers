@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SafetyBarriers.Models.Filters
+namespace NoiseBarriers.Models.Filters
 {
     internal class DirectShapeFilter : ISelectionFilter
     {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SafetyBarriers.Infrastructure.Base;
+using NoiseBarriers.Infrastructure.Base;
 
-namespace SafetyBarriers.Infrastructure
+namespace NoiseBarriers.Infrastructure
 {
     internal class LambdaCommand : Command
     {

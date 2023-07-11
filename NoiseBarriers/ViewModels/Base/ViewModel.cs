@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace SafetyBarriers.ViewModels.Base
+namespace NoiseBarriers.ViewModels.Base
 {
     internal abstract class ViewModel : INotifyPropertyChanged
     {
