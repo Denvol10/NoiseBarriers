@@ -28,7 +28,7 @@ namespace NoiseBarriers.ViewModels
 
         #region Заголовок
 
-        private string _title = "Барьерное ограждение";
+        private string _title = "Шумозащитные экраны";
 
         public string Title
         {

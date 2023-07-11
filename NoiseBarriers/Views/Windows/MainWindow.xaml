@@ -94,7 +94,7 @@
     </Window.Resources>
     <UniformGrid Columns="2">
         <StackPanel>
-            <GroupBox Header="Ось барьерного ограждения"
+            <GroupBox Header="Ось шумозащитного экрана"
                       Style="{StaticResource BorderGroupStyle}">
                 <UniformGrid Columns="2">
                     <UniformGrid Rows="2">
@@ -107,7 +107,7 @@
                              Style="{StaticResource SelectedItemsBox}" />
                 </UniformGrid>
             </GroupBox>
-            <GroupBox Header="Границы барьерного ограждения"
+            <GroupBox Header="Границы шумозащитного экрана"
                       Style="{StaticResource BorderGroupStyle}">
                 <UniformGrid Rows="2">
                     <UniformGrid Columns="2">
@@ -133,7 +133,7 @@
                     </UniformGrid>
                 </UniformGrid>
             </GroupBox>
-            <GroupBox Header="Стойки барьерного ограждения"
+            <GroupBox Header="Стойки шумозащитного экрана"
                       Style="{StaticResource BorderGroupStyle}">
                 <UniformGrid Columns="2">
                     <UniformGrid Rows="2">
@@ -232,7 +232,7 @@
                     </UniformGrid>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="Создание ограждения"
+            <GroupBox Header="Создание шумозащитных экранов"
                       Style="{StaticResource BorderGroupStyle}">
                 <StackPanel>
                     <UniformGrid Columns="2">
