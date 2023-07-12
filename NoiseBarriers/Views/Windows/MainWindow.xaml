@@ -166,11 +166,11 @@
                 </UniformGrid>
             </UniformGrid>
         </GroupBox>
-        <GroupBox Header="Панели шумозащитного экрана"
+        <GroupBox Header="Секции шумозащитного экрана"
                   Style="{StaticResource BorderGroupStyle}">
             <UniformGrid Columns="2">
                 <UniformGrid Rows="2">
-                    <TextBlock Text="Панель"
+                    <TextBlock Text="Секция"
                                Style="{StaticResource TextAboveButton}" />
                     <ComboBox Style="{StaticResource ComboBoxStyle}"
                               Margin="0,2,0,0"
