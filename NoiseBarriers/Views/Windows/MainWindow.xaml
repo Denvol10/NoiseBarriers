@@ -150,11 +150,11 @@
                                    VerticalAlignment="Center"
                                    Margin="2,0,0,0" />
                         <TextBox Text="{Binding PostStep}"
-                                 Width="60"
+                                 Width="45"
                                  Height="20"
-                                 HorizontalAlignment="Center"
+                                 HorizontalAlignment="Right"
                                  VerticalAlignment="Center"
-                                 Margin="5,0,0,0"
+                                 Margin="0,0,5,0"
                                  TextAlignment="Center" />
                     </DockPanel>
                     <CheckBox Content="Начальная стойка"
@@ -172,11 +172,25 @@
                 <UniformGrid Rows="2">
                     <TextBlock Text="Панель"
                                Style="{StaticResource TextAboveButton}" />
-                    <ComboBox Style="{StaticResource ComboBoxStyle}" 
+                    <ComboBox Style="{StaticResource ComboBoxStyle}"
                               Margin="0,2,0,0"
                               ItemsSource="{Binding GenericModelFamilySymbols}"
-                              SelectedItem="{Binding PanelFamilySymbol}"/>
+                              SelectedItem="{Binding PanelFamilySymbol}" />
                 </UniformGrid>
+                <DockPanel>
+                    <TextBlock Text="Поднять экраны, м"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               TextAlignment="Center"
+                               Margin="1,2,0,0" />
+                    <TextBox Text="{Binding LiftPanels}"
+                             Width="45"
+                             Height="20"
+                             HorizontalAlignment="Right"
+                             VerticalAlignment="Center"
+                             Margin="0,0,5,0"
+                             TextAlignment="Center" />
+                </DockPanel>
             </UniformGrid>
         </GroupBox>
         <GroupBox Header="Создание шумозащитных экранов"
@@ -191,9 +205,14 @@
                                   ItemsSource="{Binding AlignmentSafityBarrier}"
                                   SelectedItem="{Binding SelectedAlignmentSafityBarrier}" />
                     </UniformGrid>
-                    <CheckBox Content="Развернуть ограждение"
-                              Style="{StaticResource CheckBoxStyle}"
-                              IsChecked="{Binding IsRotateOn180}" />
+                    <UniformGrid Rows="2">
+                        <CheckBox Content="Развернуть стойки"
+                                  Style="{StaticResource CheckBoxStyle}"
+                                  IsChecked="{Binding IsRotatePostOn180}" />
+                        <CheckBox Content="Развернуть панели"
+                                  Style="{StaticResource CheckBoxStyle}" 
+                                  IsChecked="{Binding IsRotatePanelOn180}"/>
+                    </UniformGrid>
                 </UniformGrid>
                 <UniformGrid Columns="2"
                              Margin="0,5,0,0">

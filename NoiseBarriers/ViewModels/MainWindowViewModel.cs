@@ -93,12 +93,30 @@ namespace NoiseBarriers.ViewModels
         }
         #endregion
 
-        #region Поворот на 180 градусов
-        private bool _isRotateOn180;
-        public bool IsRotateOn180
+        #region Приподнять панель экрана над землей
+        private double _liftPanels = 0.02;
+        public double LiftPanels
         {
-            get => _isRotateOn180;
-            set => Set(ref _isRotateOn180, value);
+            get => _liftPanels;
+            set => Set(ref _liftPanels, value);
+        }
+        #endregion
+
+        #region Поворот стоек на 180 градусов
+        private bool _isRotatePostOn180;
+        public bool IsRotatePostOn180
+        {
+            get => _isRotatePostOn180;
+            set => Set(ref _isRotatePostOn180, value);
+        }
+        #endregion
+
+        #region Поворот панелей на 180 градусов
+        private bool _isRotatePanelOn180;
+        public bool IsRotatePanelOn180
+        {
+            get => _isRotatePanelOn180;
+            set => Set(ref _isRotatePanelOn180, value);
         }
         #endregion
 
@@ -300,12 +318,12 @@ namespace NoiseBarriers.ViewModels
         private void OnCreateSafetyBarrierCommandExecuted(object parameter)
         {
             RevitModel.GetBoundParameters();
-            RevitModel.GetLocationPostFamilyInstances(IsRotateOn180,
+            RevitModel.GetLocationPostFamilyInstances(IsRotatePostOn180,
                                                  SelectedAlignmentSafityBarrier,
                                                  IsIncludeStartPost,
                                                  IsIncludeFinishPost,
                                                  PostStep);
-            RevitModel.GetLocationBeamFamilyInstances(IsRotateOn180,
+            RevitModel.GetLocationBeamFamilyInstances(IsRotatePostOn180,
                                                       SelectedAlignmentSafityBarrier,
                                                       BeamCollection,
                                                       BeamLength);
