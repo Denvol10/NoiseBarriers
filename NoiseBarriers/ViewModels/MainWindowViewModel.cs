@@ -314,7 +314,7 @@ namespace NoiseBarriers.ViewModels
                                                  IsIncludeStartPost,
                                                  IsIncludeFinishPost,
                                                  PostStep);
-            RevitModel.CreateSafetyBarrier(PostFamilySymbol);
+            RevitModel.CreateSafetyBarrier(PostFamilySymbol, PanelFamilySymbol);
             RevitCommand.mainView.Close();
         }
 

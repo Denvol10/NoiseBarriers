@@ -109,6 +109,10 @@ namespace NoiseBarriers
         private List<(XYZ Point, double Rotation)> _postLocations = new List<(XYZ Point, double Rotation)>();
         #endregion
 
+        #region Положение панелей шумозащитного экрана
+        private List<(XYZ Point, double Rotation)> _panelLocations = new List<(XYZ Point, double Rotation)>();
+        #endregion
+
         #region Получение парметров границ барьерного ограждения
         public void GetBoundParameters()
         {
@@ -128,8 +132,8 @@ namespace NoiseBarriers
                                                      _boundPostParameter2,
                                                      postStep,
                                                      alignment,
-                                                     isIncludeStart,
-                                                     isIncludeFinish);
+                                                     true,
+                                                     true);
 
             foreach (double parameter in pointParameters)
             {
@@ -137,16 +141,40 @@ namespace NoiseBarriers
                 XYZ point = BarrierAxis.GetPointOnPolyLinePlaneParameter(parameter, out targetLine);
                 XYZ lineVector = targetLine.GetEndPoint(0) - targetLine.GetEndPoint(1);
                 double rotationAngle = lineVector.AngleTo(XYZ.BasisY);
-                rotationAngle = RotatePost(rotationAngle, lineVector, isRotateOn180);
+                rotationAngle = RotateFamilyInstance(rotationAngle, lineVector, isRotateOn180);
                 _postLocations.Add((point, rotationAngle));
+            }
+
+            for (int i = 0; i < _postLocations.Count - 1; i++)
+            {
+                var startPoint = _postLocations.ElementAt(i).Point;
+                var endPoint = _postLocations.ElementAt(i + 1).Point;
+
+                XYZ panelVector = startPoint - endPoint;
+                double rotationAngle = panelVector.AngleTo(XYZ.BasisY);
+                rotationAngle = RotateFamilyInstance(rotationAngle, panelVector, false) + Math.PI;
+                _panelLocations.Add((startPoint, rotationAngle));
+            }
+
+
+            if (!isIncludeStart)
+            {
+                _postLocations.RemoveAt(0);
+            }
+
+            if(!isIncludeFinish)
+            {
+                _postLocations.RemoveAt((_postLocations.Count - 1));
             }
         }
         #endregion
 
         #region Создание шумозащитного экрана
-        public void CreateSafetyBarrier(FamilySymbolSelector postFamilyAndSymbolName)
+        public void CreateSafetyBarrier(FamilySymbolSelector postFamilyAndSymbolName, FamilySymbolSelector panelFamilyAndSymbolName)
         {
             FamilySymbol postFSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, postFamilyAndSymbolName);
+
+            FamilySymbol panelFSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, panelFamilyAndSymbolName);
 
             var level = new FilteredElementCollector(Doc).OfCategory(BuiltInCategory.OST_Levels).Where(e => e.Name == "Уровень 1").First() as Level;
 
@@ -158,11 +186,24 @@ namespace NoiseBarriers
                     postFSymbol.Activate();
                 }
 
+                if (!panelFSymbol.IsActive)
+                {
+                    panelFSymbol.Activate();
+                }
+
                 foreach (var location in _postLocations)
                 {
                     FamilyInstance postFamilyInstance = Doc.Create.NewFamilyInstance(location.Item1, postFSymbol, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
 
                     postFamilyInstance.Location.Rotate(Line.CreateUnbound(location.Point, XYZ.BasisZ), location.Rotation);
+                }
+
+                foreach (var location in _panelLocations)
+                {
+                    FamilyInstance panelFamilyInstance = Doc.Create.NewFamilyInstance(location.Point, panelFSymbol,
+                        Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+
+                    panelFamilyInstance.Location.Rotate(Line.CreateUnbound(location.Point, XYZ.BasisZ), location.Rotation);
                 }
 
                 trans.Commit();
@@ -252,7 +293,7 @@ namespace NoiseBarriers
         #endregion
 
         #region Поворот стоек
-        private double RotatePost(double rotationAngle, XYZ lineVector, bool isRotateOn180)
+        private double RotateFamilyInstance(double rotationAngle, XYZ lineVector, bool isRotateOn180)
         {
             double resultRotationAngle = rotationAngle;
 

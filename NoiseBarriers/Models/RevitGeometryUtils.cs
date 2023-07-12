@@ -36,7 +36,6 @@ namespace NoiseBarriers.Models
             return boundCurve;
         }
 
-
         // Метод получения строки с ElementId
         private static string ElementIdToString(IEnumerable<Element> elements)
         {
