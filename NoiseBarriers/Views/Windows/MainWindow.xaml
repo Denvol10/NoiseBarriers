@@ -8,8 +8,8 @@
         xmlns:local="clr-namespace:NoiseBarriers"
         mc:Ignorable="d"
         Title="{Binding Title}"
-        Height="323"
-        Width="700"
+        Height="500"
+        Width="350"
         Background="#f0f0f0"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
@@ -92,8 +92,7 @@
                     Value="Center" />
         </Style>
     </Window.Resources>
-    <UniformGrid Columns="2">
-        <StackPanel>
+    <StackPanel>
             <GroupBox Header="Ось шумозащитного экрана"
                       Style="{StaticResource BorderGroupStyle}">
                 <UniformGrid Columns="2">
@@ -168,70 +167,6 @@
                     </UniformGrid>
                 </UniformGrid>
             </GroupBox>
-        </StackPanel>
-        <StackPanel>
-            <GroupBox Header="Балки ограждения"
-                      Style="{StaticResource BorderGroupStyle}">
-                <StackPanel>
-                    <DataGrid x:Name="datagrid"
-                              ItemsSource="{Binding BeamCollection}"
-                              CanUserAddRows="False"
-                              AutoGenerateColumns="False"
-                              GridLinesVisibility="Vertical"
-                              VerticalGridLinesBrush="DarkGray"
-                              AlternatingRowBackground="LightGray"
-                              Height="109"
-                              RowHeight="24">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="X, м"
-                                                Binding="{Binding OffsetX}"
-                                                Width="40" />
-                            <DataGridTextColumn Header="Z, м"
-                                                Binding="{Binding OffsetZ}"
-                                                Width="40" />
-                            <DataGridTemplateColumn Header="Семейство"
-                                                    Width="*">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <ComboBox ItemsSource="{Binding DataContext.BeamFamilySymbols, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                  SelectedValue="{Binding FamilyAndSymbolName, UpdateSourceTrigger=PropertyChanged}" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                    <UniformGrid Columns="2"
-                                 Margin="0,2,0,0">
-                        <Button Style="{StaticResource SelectButton}"
-                                Content="Добавить"
-                                Command="{Binding AddBeamSetupCommand}" />
-                        <Button Style="{StaticResource SelectButton}"
-                                Content="Удалить"
-                                Command="{Binding DeleteBeamSetupCommand}"
-                                CommandParameter="{Binding SelectedBeam}" />
-                    </UniformGrid>
-                    <UniformGrid Columns="2"
-                                 Margin="0,5,0,0">
-                        <DockPanel>
-                            <TextBlock Text="Длина балок, м"
-                                       HorizontalAlignment="Right"
-                                       VerticalAlignment="Center"
-                                       Margin="2,0,0,0" />
-                            <TextBox Text="{Binding BeamLength}"
-                                     Width="60"
-                                     Height="20"
-                                     HorizontalAlignment="Center"
-                                     VerticalAlignment="Center"
-                                     Margin="5,0,0,0"
-                                     TextAlignment="Center" />
-                        </DockPanel>
-                        <CheckBox Content="Развернуть балки"
-                                  Style="{StaticResource CheckBoxStyle}"
-                                  HorizontalAlignment="Center"
-                                  IsChecked="{Binding IsReverseBeams}" />
-                    </UniformGrid>
-                </StackPanel>
-            </GroupBox>
             <GroupBox Header="Создание шумозащитных экранов"
                       Style="{StaticResource BorderGroupStyle}">
                 <StackPanel>
@@ -254,11 +189,10 @@
                                 Content="Создать"
                                 Command="{Binding CreateSafetyBarrierCommand}" />
                         <Button Style="{StaticResource SelectButton}"
-                                Content="Отмена" 
-                                Command="{Binding CloseWindow}"/>
+                                Content="Отмена"
+                                Command="{Binding CloseWindow}" />
                     </UniformGrid>
                 </StackPanel>
             </GroupBox>
         </StackPanel>
-    </UniformGrid>
 </Window>

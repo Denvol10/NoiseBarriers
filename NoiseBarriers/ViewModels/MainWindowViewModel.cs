@@ -176,7 +176,7 @@ namespace NoiseBarriers.ViewModels
         #endregion
 
         #region Шаг стоек
-        private double _postStep = 2.5;
+        private double _postStep = 3.0;
         public double PostStep
         {
             get => _postStep;
