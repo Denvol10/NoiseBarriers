@@ -32,7 +32,7 @@ namespace NoiseBarriers
             Doc = uiapp.ActiveUIDocument.Document;
         }
 
-        #region Ось барьерного ограждения
+        #region Ось шумозащитного экрана
         public ParametricPolyLine BarrierAxis { get; set; }
 
         private string _barrierAxisElemIds;
@@ -49,7 +49,7 @@ namespace NoiseBarriers
         }
         #endregion
 
-        #region Граница барьерного ограждения 1
+        #region Граница шумозащитного экрана 1
         public Curve BoundCurve1 { get; set; }
 
         private string _boundCurveId1;
@@ -65,7 +65,7 @@ namespace NoiseBarriers
         }
         #endregion
 
-        #region Граница барьерного ограждения 2
+        #region Граница шумозащитного экрана 2
         public Curve BoundCurve2 { get; set; }
 
         private string _boundCurveId2;
@@ -81,7 +81,7 @@ namespace NoiseBarriers
         }
         #endregion
 
-        #region Получение названиий семейств для стоек барьерного ограждения
+        #region Получение названиий семейств для шумозащитного экрана
         public ObservableCollection<FamilySymbolSelector> GetPostFamilySymbolNames()
         {
             var familySymbols = RevitFamilyUtils.GetFamilySymbolNames(Doc, BuiltInCategory.OST_GenericModel);
@@ -97,11 +97,11 @@ namespace NoiseBarriers
         }
         #endregion
 
-        #region Параметр стоек границы барьерного ограждения 1
+        #region Параметр стоек границы шумозащитного экрана 1
         private double _boundPostParameter1;
         #endregion
 
-        #region Параметр стоек границы барьерного ограждения 2
+        #region Параметр стоек границы шумозащитного экрана 2
         private double _boundPostParameter2;
         #endregion
 
@@ -113,7 +113,7 @@ namespace NoiseBarriers
         private double _boundBeamParameter2;
         #endregion
 
-        #region Положение стоек барьерного ограждения
+        #region Положение стоек шумозащитного экрана
         private List<(XYZ Point, double Rotation)> _postLocations = new List<(XYZ Point, double Rotation)>();
         #endregion
 
@@ -133,7 +133,7 @@ namespace NoiseBarriers
         }
         #endregion
 
-        #region Получение положения стоек барьерного ограждения
+        #region Получение положения стоек шумозащитного экрана
         public void GetLocationPostFamilyInstances(bool isRotateOn180,
                                               string alignment,
                                               bool isIncludeStart,

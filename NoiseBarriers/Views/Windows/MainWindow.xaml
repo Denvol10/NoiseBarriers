@@ -202,8 +202,8 @@
                                    Style="{StaticResource TextAboveButton}" />
                         <ComboBox Style="{StaticResource ComboBoxStyle}"
                                   Margin="0,2,0,0"
-                                  ItemsSource="{Binding AlignmentSafityBarrier}"
-                                  SelectedItem="{Binding SelectedAlignmentSafityBarrier}" />
+                                  ItemsSource="{Binding AlignmentNoiseBarrier}"
+                                  SelectedItem="{Binding SelectedAlignmentNoiseBarrier}" />
                     </UniformGrid>
                     <UniformGrid Rows="2">
                         <CheckBox Content="Развернуть стойки"

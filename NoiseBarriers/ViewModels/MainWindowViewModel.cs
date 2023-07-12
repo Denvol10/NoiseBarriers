@@ -122,7 +122,7 @@ namespace NoiseBarriers.ViewModels
 
         #region Начало построения ограждения
         private ObservableCollection<string> _alignmentSafityBarrier;
-        public ObservableCollection<string> AlignmentSafityBarrier
+        public ObservableCollection<string> AlignmentNoiseBarrier
         {
             get => _alignmentSafityBarrier;
             set => Set(ref _alignmentSafityBarrier, value);
@@ -131,7 +131,7 @@ namespace NoiseBarriers.ViewModels
 
         #region Выбранное начало построения ограждения
         private string _selectedAlignmentSafityBarrier;
-        public string SelectedAlignmentSafityBarrier
+        public string SelectedAlignmentNoiseBarrier
         {
             get => _selectedAlignmentSafityBarrier;
             set => Set(ref _selectedAlignmentSafityBarrier, value);
@@ -319,12 +319,12 @@ namespace NoiseBarriers.ViewModels
         {
             RevitModel.GetBoundParameters();
             RevitModel.GetLocationPostFamilyInstances(IsRotatePostOn180,
-                                                 SelectedAlignmentSafityBarrier,
+                                                 SelectedAlignmentNoiseBarrier,
                                                  IsIncludeStartPost,
                                                  IsIncludeFinishPost,
                                                  PostStep);
             RevitModel.GetLocationBeamFamilyInstances(IsRotatePostOn180,
-                                                      SelectedAlignmentSafityBarrier,
+                                                      SelectedAlignmentNoiseBarrier,
                                                       BeamCollection,
                                                       BeamLength);
             RevitModel.CreateSafetyBarrier(PostFamilySymbol, IsReverseBeams);
@@ -363,14 +363,14 @@ namespace NoiseBarriers.ViewModels
 
             BeamFamilySymbols = RevitModel.GetBeamFamilySymbolNames();
 
-            AlignmentSafityBarrier = new ObservableCollection<string>
+            AlignmentNoiseBarrier = new ObservableCollection<string>
             {
                 "Начало",
                 "Конец",
                 "Середина"
             };
 
-            SelectedAlignmentSafityBarrier = "Начало";
+            SelectedAlignmentNoiseBarrier = "Начало";
 
             BeamCollection = new ObservableCollection<BeamSetup>()
             {
