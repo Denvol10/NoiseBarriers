@@ -309,11 +309,12 @@ namespace NoiseBarriers.ViewModels
         private void OnCreateSafetyBarrierCommandExecuted(object parameter)
         {
             RevitModel.GetBoundParameters();
-            RevitModel.GetLocationPostFamilyInstances(IsRotatePostOn180,
+            RevitModel.GetLocationFamilyInstances(IsRotatePostOn180,
                                                  SelectedAlignmentNoiseBarrier,
                                                  IsIncludeStartPost,
                                                  IsIncludeFinishPost,
-                                                 PostStep);
+                                                 PostStep,
+                                                 LiftPanels);
             RevitModel.CreateSafetyBarrier(PostFamilySymbol, PanelFamilySymbol);
             RevitCommand.mainView.Close();
         }

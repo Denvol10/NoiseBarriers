@@ -121,12 +121,13 @@ namespace NoiseBarriers
         }
         #endregion
 
-        #region Получение положения стоек шумозащитного экрана
-        public void GetLocationPostFamilyInstances(bool isRotateOn180,
+        #region Получение положения шумозащитного экрана
+        public void GetLocationFamilyInstances(bool isRotateOn180,
                                               string alignment,
                                               bool isIncludeStart,
                                               bool isIncludeFinish,
-                                              double postStep)
+                                              double postStep,
+                                              double liftPanels)
         {
             var pointParameters = GenerateParameters(_boundPostParameter1,
                                                      _boundPostParameter2,
@@ -145,6 +146,8 @@ namespace NoiseBarriers
                 _postLocations.Add((point, rotationAngle));
             }
 
+            liftPanels = UnitUtils.ConvertToInternalUnits(liftPanels, UnitTypeId.Meters);
+
             for (int i = 0; i < _postLocations.Count - 1; i++)
             {
                 var startPoint = _postLocations.ElementAt(i).Point;
@@ -153,7 +156,8 @@ namespace NoiseBarriers
                 XYZ panelVector = startPoint - endPoint;
                 double rotationAngle = panelVector.AngleTo(XYZ.BasisY);
                 rotationAngle = RotateFamilyInstance(rotationAngle, panelVector, false) + Math.PI;
-                _panelLocations.Add((startPoint, rotationAngle));
+                XYZ panelPoint = new XYZ(startPoint.X, startPoint.Y, startPoint.Z + liftPanels);
+                _panelLocations.Add((panelPoint, rotationAngle));
             }
 
 
