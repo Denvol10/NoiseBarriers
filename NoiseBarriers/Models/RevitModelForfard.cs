@@ -182,7 +182,7 @@ namespace NoiseBarriers
 
             var level = new FilteredElementCollector(Doc).OfCategory(BuiltInCategory.OST_Levels).Where(e => e.Name == "Уровень 1").First() as Level;
 
-            using (Transaction trans = new Transaction(Doc, "Created Safety Barrier"))
+            using (Transaction trans = new Transaction(Doc, "Created Noise Barrier"))
             {
                 trans.Start();
                 if (!postFSymbol.IsActive)
@@ -197,14 +197,15 @@ namespace NoiseBarriers
 
                 foreach (var location in _postLocations)
                 {
-                    FamilyInstance postFamilyInstance = Doc.Create.NewFamilyInstance(location.Item1, postFSymbol, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+                    FamilyInstance postFamilyInstance = Doc.Create.NewFamilyInstance(location.Item1, postFSymbol, level,
+                        Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
 
                     postFamilyInstance.Location.Rotate(Line.CreateUnbound(location.Point, XYZ.BasisZ), location.Rotation);
                 }
 
                 foreach (var location in _panelLocations)
                 {
-                    FamilyInstance panelFamilyInstance = Doc.Create.NewFamilyInstance(location.Point, panelFSymbol,
+                    FamilyInstance panelFamilyInstance = Doc.Create.NewFamilyInstance(location.Point, panelFSymbol, level,
                         Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
 
                     panelFamilyInstance.Location.Rotate(Line.CreateUnbound(location.Point, XYZ.BasisZ), location.Rotation);
