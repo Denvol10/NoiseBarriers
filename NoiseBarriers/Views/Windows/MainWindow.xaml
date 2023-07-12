@@ -93,106 +93,118 @@
         </Style>
     </Window.Resources>
     <StackPanel>
-            <GroupBox Header="Ось шумозащитного экрана"
-                      Style="{StaticResource BorderGroupStyle}">
+        <GroupBox Header="Ось шумозащитного экрана"
+                  Style="{StaticResource BorderGroupStyle}">
+            <UniformGrid Columns="2">
+                <UniformGrid Rows="2">
+                    <TextBlock Text="Линии оси ограждения"
+                               Style="{StaticResource TextAboveButton}" />
+                    <Button Style="{StaticResource SelectButton}"
+                            Command="{Binding GetBarrierAxisCommand}" />
+                </UniformGrid>
+                <TextBox Text="{Binding BarrierAxisElemIds, Mode=OneWay}"
+                         Style="{StaticResource SelectedItemsBox}" />
+            </UniformGrid>
+        </GroupBox>
+        <GroupBox Header="Границы шумозащитного экрана"
+                  Style="{StaticResource BorderGroupStyle}">
+            <UniformGrid Rows="2">
                 <UniformGrid Columns="2">
                     <UniformGrid Rows="2">
-                        <TextBlock Text="Линии оси ограждения"
+                        <TextBlock Text="Линия границы 1"
                                    Style="{StaticResource TextAboveButton}" />
                         <Button Style="{StaticResource SelectButton}"
-                                Command="{Binding GetBarrierAxisCommand}" />
+                                Command="{Binding GetBoundCurve1Command}" />
                     </UniformGrid>
-                    <TextBox Text="{Binding BarrierAxisElemIds, Mode=OneWay}"
-                             Style="{StaticResource SelectedItemsBox}" />
+                    <TextBox Style="{StaticResource SelectedItemsBox}"
+                             Text="{Binding BoundCurve1, Mode=OneWay}" />
                 </UniformGrid>
-            </GroupBox>
-            <GroupBox Header="Границы шумозащитного экрана"
-                      Style="{StaticResource BorderGroupStyle}">
+                <UniformGrid Columns="2"
+                             Margin="0,5,0,0">
+                    <UniformGrid Rows="2">
+                        <TextBlock Text="Линия границы 2"
+                                   Style="{StaticResource TextAboveButton}" />
+                        <Button Style="{StaticResource SelectButton}"
+                                Command="{Binding GetBoundCurve2Command}" />
+                    </UniformGrid>
+                    <TextBox Style="{StaticResource SelectedItemsBox}"
+                             Text="{Binding BoundCurve2, Mode=OneWay}" />
+                </UniformGrid>
+            </UniformGrid>
+        </GroupBox>
+        <GroupBox Header="Стойки шумозащитного экрана"
+                  Style="{StaticResource BorderGroupStyle}">
+            <UniformGrid Columns="2">
                 <UniformGrid Rows="2">
-                    <UniformGrid Columns="2">
-                        <UniformGrid Rows="2">
-                            <TextBlock Text="Линия границы 1"
-                                       Style="{StaticResource TextAboveButton}" />
-                            <Button Style="{StaticResource SelectButton}"
-                                    Command="{Binding GetBoundCurve1Command}" />
-                        </UniformGrid>
-                        <TextBox Style="{StaticResource SelectedItemsBox}"
-                                 Text="{Binding BoundCurve1, Mode=OneWay}" />
-                    </UniformGrid>
-                    <UniformGrid Columns="2"
-                                 Margin="0,5,0,0">
-                        <UniformGrid Rows="2">
-                            <TextBlock Text="Линия границы 2"
-                                       Style="{StaticResource TextAboveButton}" />
-                            <Button Style="{StaticResource SelectButton}"
-                                    Command="{Binding GetBoundCurve2Command}" />
-                        </UniformGrid>
-                        <TextBox Style="{StaticResource SelectedItemsBox}"
-                                 Text="{Binding BoundCurve2, Mode=OneWay}" />
-                    </UniformGrid>
+                    <TextBlock Text="Стойка"
+                               Style="{StaticResource TextAboveButton}" />
+                    <ComboBox Style="{StaticResource ComboBoxStyle}"
+                              Margin="0,2,0,0"
+                              ItemsSource="{Binding GenericModelFamilySymbols}"
+                              SelectedItem="{Binding PostFamilySymbol}" />
                 </UniformGrid>
-            </GroupBox>
-            <GroupBox Header="Стойки шумозащитного экрана"
-                      Style="{StaticResource BorderGroupStyle}">
+                <UniformGrid Rows="3">
+                    <DockPanel>
+                        <TextBlock Text="Шаг стоек, м"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Center"
+                                   Margin="2,0,0,0" />
+                        <TextBox Text="{Binding PostStep}"
+                                 Width="60"
+                                 Height="20"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 Margin="5,0,0,0"
+                                 TextAlignment="Center" />
+                    </DockPanel>
+                    <CheckBox Content="Начальная стойка"
+                              Style="{StaticResource CheckBoxStyle}"
+                              IsChecked="{Binding IsIncludeStartPost}" />
+                    <CheckBox Content="Конечная стойка"
+                              Style="{StaticResource CheckBoxStyle}"
+                              IsChecked="{Binding IsIncludeFinishPost}" />
+                </UniformGrid>
+            </UniformGrid>
+        </GroupBox>
+        <GroupBox Header="Панели шумозащитного экрана"
+                  Style="{StaticResource BorderGroupStyle}">
+            <UniformGrid Columns="2">
+                <UniformGrid Rows="2">
+                    <TextBlock Text="Панель"
+                               Style="{StaticResource TextAboveButton}" />
+                    <ComboBox Style="{StaticResource ComboBoxStyle}" 
+                              Margin="0,2,0,0"
+                              ItemsSource="{Binding GenericModelFamilySymbols}"
+                              SelectedItem="{Binding PanelFamilySymbol}"/>
+                </UniformGrid>
+            </UniformGrid>
+        </GroupBox>
+        <GroupBox Header="Создание шумозащитных экранов"
+                  Style="{StaticResource BorderGroupStyle}">
+            <StackPanel>
                 <UniformGrid Columns="2">
                     <UniformGrid Rows="2">
-                        <TextBlock Text="Стойка"
+                        <TextBlock Text="Выравнивание ограждения"
                                    Style="{StaticResource TextAboveButton}" />
                         <ComboBox Style="{StaticResource ComboBoxStyle}"
                                   Margin="0,2,0,0"
-                                  ItemsSource="{Binding GenericModelFamilySymbols}"
-                                  SelectedItem="{Binding PostFamilySymbol}" />
-
+                                  ItemsSource="{Binding AlignmentSafityBarrier}"
+                                  SelectedItem="{Binding SelectedAlignmentSafityBarrier}" />
                     </UniformGrid>
-                    <UniformGrid Rows="3">
-                        <DockPanel>
-                            <TextBlock Text="Шаг стоек, м"
-                                       HorizontalAlignment="Right"
-                                       VerticalAlignment="Center"
-                                       Margin="2,0,0,0" />
-                            <TextBox Text="{Binding PostStep}"
-                                     Width="60"
-                                     Height="20"
-                                     HorizontalAlignment="Center"
-                                     VerticalAlignment="Center"
-                                     Margin="5,0,0,0"
-                                     TextAlignment="Center" />
-                        </DockPanel>
-                        <CheckBox Content="Начальная стойка"
-                                  Style="{StaticResource CheckBoxStyle}"
-                                  IsChecked="{Binding IsIncludeStartPost}" />
-                        <CheckBox Content="Конечная стойка"
-                                  Style="{StaticResource CheckBoxStyle}"
-                                  IsChecked="{Binding IsIncludeFinishPost}" />
-                    </UniformGrid>
+                    <CheckBox Content="Развернуть ограждение"
+                              Style="{StaticResource CheckBoxStyle}"
+                              IsChecked="{Binding IsRotateOn180}" />
                 </UniformGrid>
-            </GroupBox>
-            <GroupBox Header="Создание шумозащитных экранов"
-                      Style="{StaticResource BorderGroupStyle}">
-                <StackPanel>
-                    <UniformGrid Columns="2">
-                        <UniformGrid Rows="2">
-                            <TextBlock Text="Выравнивание ограждения"
-                                       Style="{StaticResource TextAboveButton}" />
-                            <ComboBox Style="{StaticResource ComboBoxStyle}"
-                                      Margin="0,2,0,0"
-                                      ItemsSource="{Binding AlignmentSafityBarrier}"
-                                      SelectedItem="{Binding SelectedAlignmentSafityBarrier}" />
-                        </UniformGrid>
-                        <CheckBox Content="Развернуть ограждение"
-                                  Style="{StaticResource CheckBoxStyle}"
-                                  IsChecked="{Binding IsRotateOn180}" />
-                    </UniformGrid>
-                    <UniformGrid Columns="2"
-                                 Margin="0,5,0,0">
-                        <Button Style="{StaticResource SelectButton}"
-                                Content="Создать"
-                                Command="{Binding CreateSafetyBarrierCommand}" />
-                        <Button Style="{StaticResource SelectButton}"
-                                Content="Отмена"
-                                Command="{Binding CloseWindow}" />
-                    </UniformGrid>
-                </StackPanel>
-            </GroupBox>
-        </StackPanel>
+                <UniformGrid Columns="2"
+                             Margin="0,5,0,0">
+                    <Button Style="{StaticResource SelectButton}"
+                            Content="Создать"
+                            Command="{Binding CreateSafetyBarrierCommand}" />
+                    <Button Style="{StaticResource SelectButton}"
+                            Content="Отмена"
+                            Command="{Binding CloseWindow}" />
+                </UniformGrid>
+            </StackPanel>
+        </GroupBox>
+    </StackPanel>
 </Window>

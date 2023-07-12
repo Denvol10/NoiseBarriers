@@ -84,6 +84,15 @@ namespace NoiseBarriers.ViewModels
         }
         #endregion
 
+        #region Выбранный типоразмер семейства панели
+        private FamilySymbolSelector _panelFamilySymbol;
+        public FamilySymbolSelector PanelFamilySymbol
+        {
+            get => _panelFamilySymbol;
+            set => Set(ref _panelFamilySymbol, value);
+        }
+        #endregion
+
         #region Поворот на 180 градусов
         private bool _isRotateOn180;
         public bool IsRotateOn180
