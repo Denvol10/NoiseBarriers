@@ -193,15 +193,6 @@ namespace NoiseBarriers.ViewModels
         }
         #endregion
 
-        #region Развернуть балки
-        private bool _isReverseBeams;
-        public bool IsReverseBeams
-        {
-            get => _isReverseBeams;
-            set => Set(ref _isReverseBeams, value);
-        }
-        #endregion
-
         #region Шаг стоек
         private double _postStep = 3.0;
         public double PostStep
@@ -323,11 +314,7 @@ namespace NoiseBarriers.ViewModels
                                                  IsIncludeStartPost,
                                                  IsIncludeFinishPost,
                                                  PostStep);
-            RevitModel.GetLocationBeamFamilyInstances(IsRotatePostOn180,
-                                                      SelectedAlignmentNoiseBarrier,
-                                                      BeamCollection,
-                                                      BeamLength);
-            RevitModel.CreateSafetyBarrier(PostFamilySymbol, IsReverseBeams);
+            RevitModel.CreateSafetyBarrier(PostFamilySymbol);
             RevitCommand.mainView.Close();
         }
 

@@ -105,21 +105,8 @@ namespace NoiseBarriers
         private double _boundPostParameter2;
         #endregion
 
-        #region Параметр границ полотна ограждения 1
-        private double _boundBeamParameter1;
-        #endregion
-
-        #region Параметр границ полотна ограждения 2
-        private double _boundBeamParameter2;
-        #endregion
-
         #region Положение стоек шумозащитного экрана
         private List<(XYZ Point, double Rotation)> _postLocations = new List<(XYZ Point, double Rotation)>();
-        #endregion
-
-        #region Положение полотен барьерного ограждения
-        private List<(List<Curve> Lines, FamilySymbolSelector FamilySymbol)> _beamLocations = new List<(List<Curve> Lines, 
-                                                                                                        FamilySymbolSelector FamilySymbol)>();
         #endregion
 
         #region Получение парметров границ барьерного ограждения
@@ -127,9 +114,6 @@ namespace NoiseBarriers
         {
             BarrierAxis.IntersectAndGetPlaneParameter(BoundCurve1, out _boundPostParameter1);
             BarrierAxis.IntersectAndGetPlaneParameter(BoundCurve2, out _boundPostParameter2);
-
-            BarrierAxis.IntersectAndGetParameter(BoundCurve1, out _boundBeamParameter1);
-            BarrierAxis.IntersectAndGetParameter(BoundCurve2, out _boundBeamParameter2);
         }
         #endregion
 
@@ -159,57 +143,8 @@ namespace NoiseBarriers
         }
         #endregion
 
-        #region Получения положения полотна барьерного ограждения
-        public void GetLocationBeamFamilyInstances(bool isRotateOn180,
-                                                   string alignment,
-                                                   IEnumerable<BeamSetup> beamSetups,
-                                                   double beamLength)
-        {
-            var pointParameters = GenerateParameters(_boundBeamParameter1, _boundBeamParameter2, beamLength, alignment, true, true);
-            var beamLocationsOnAxis = new List<(XYZ Point, XYZ VectorX)>();
-
-            foreach (double parameter in pointParameters)
-            {
-                Line targetLine;
-                XYZ point = BarrierAxis.GetPointOnPolyLine(parameter, out targetLine);
-                XYZ normal = targetLine.GetEndPoint(1) - targetLine.GetEndPoint(0);
-
-                XYZ vectorX = normal.CrossProduct(XYZ.BasisZ).Normalize();
-                if(isRotateOn180)
-                {
-                    vectorX = vectorX.Negate();
-                }
-
-                beamLocationsOnAxis.Add((point, vectorX));
-            }
-
-            foreach(var beamSetup in beamSetups)
-            {
-                double offsetX = UnitUtils.ConvertToInternalUnits(beamSetup.OffsetX, UnitTypeId.Meters);
-                double offsetZ = UnitUtils.ConvertToInternalUnits(beamSetup.OffsetZ, UnitTypeId.Meters);
-
-                var beamPoints = new List<XYZ>();
-                foreach(var location in beamLocationsOnAxis)
-                {
-                    beamPoints.Add(location.Point + location.VectorX * offsetX + XYZ.BasisZ * offsetZ);
-                }
-
-                var pointLines = GetPairs(beamPoints);
-
-                var lines = new List<Curve>();
-                foreach(var points in pointLines)
-                {
-                    Line beamLine = Line.CreateBound(points.Item1, points.Item2);
-                    lines.Add(beamLine);
-                }
-
-                _beamLocations.Add((lines, beamSetup.FamilyAndSymbolName));
-            }
-        }
-        #endregion
-
-        #region Создание барьерного ограждения
-        public void CreateSafetyBarrier(FamilySymbolSelector postFamilyAndSymbolName, bool isReverseBeams)
+        #region Создание шумозащитного экрана
+        public void CreateSafetyBarrier(FamilySymbolSelector postFamilyAndSymbolName)
         {
             FamilySymbol postFSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, postFamilyAndSymbolName);
 
@@ -228,30 +163,6 @@ namespace NoiseBarriers
                     FamilyInstance postFamilyInstance = Doc.Create.NewFamilyInstance(location.Item1, postFSymbol, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
 
                     postFamilyInstance.Location.Rotate(Line.CreateUnbound(location.Point, XYZ.BasisZ), location.Rotation);
-                }
-
-                foreach (var location in _beamLocations)
-                {
-                    FamilySymbol beamFSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, location.FamilySymbol);
-                    if (!beamFSymbol.IsActive)
-                    {
-                        beamFSymbol.Activate();
-                    }
-
-                    foreach(var line in location.Lines)
-                    {
-                        FamilyInstance beamFamilyInstance = Doc.Create.NewFamilyInstance(line,
-                                                                 beamFSymbol,
-                                                                 level,
-                                                                 Autodesk.Revit.DB.Structure.StructuralType.Beam);
-                        StructuralFramingUtils.DisallowJoinAtEnd(beamFamilyInstance, 0);
-                        StructuralFramingUtils.DisallowJoinAtEnd(beamFamilyInstance, 1);
-
-                        if(isReverseBeams)
-                        {
-                            beamFamilyInstance.flipFacing();
-                        }
-                    }
                 }
 
                 trans.Commit();
