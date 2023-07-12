@@ -89,14 +89,6 @@ namespace NoiseBarriers
         }
         #endregion
 
-        #region Получение названиий семейств для полотен барьерного ограждения
-        public ObservableCollection<FamilySymbolSelector> GetBeamFamilySymbolNames()
-        {
-            var familySymbols = RevitFamilyUtils.GetFamilySymbolNames(Doc, BuiltInCategory.OST_StructuralFraming);
-            return familySymbols;
-        }
-        #endregion
-
         #region Параметр стоек границы шумозащитного экрана 1
         private double _boundPostParameter1;
         #endregion
@@ -113,7 +105,7 @@ namespace NoiseBarriers
         private List<(XYZ Point, double Rotation)> _panelLocations = new List<(XYZ Point, double Rotation)>();
         #endregion
 
-        #region Получение парметров границ барьерного ограждения
+        #region Получение парметров границ шумозащитного экрана
         public void GetBoundParameters()
         {
             BarrierAxis.IntersectAndGetPlaneParameter(BoundCurve1, out _boundPostParameter1);
@@ -153,9 +145,12 @@ namespace NoiseBarriers
                 var startPoint = _postLocations.ElementAt(i).Point;
                 var endPoint = _postLocations.ElementAt(i + 1).Point;
 
-                XYZ panelVector = startPoint - endPoint;
+                var startPointOnPlane = new XYZ(startPoint.X, startPoint.Y, 0);
+                var endPointOnPlane = new XYZ(endPoint.X, endPoint.Y, 0);
+
+                XYZ panelVector = endPointOnPlane - startPointOnPlane;
                 double rotationAngle = panelVector.AngleTo(XYZ.BasisY);
-                rotationAngle = RotateFamilyInstance(rotationAngle, panelVector, false) + Math.PI;
+                rotationAngle = RotateFamilyInstance(rotationAngle, panelVector, false);
                 XYZ panelPoint = new XYZ(startPoint.X, startPoint.Y, startPoint.Z + liftPanels);
                 _panelLocations.Add((panelPoint, rotationAngle));
             }

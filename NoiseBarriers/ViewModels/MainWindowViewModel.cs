@@ -38,7 +38,7 @@ namespace NoiseBarriers.ViewModels
 
         #endregion
 
-        #region Элементы оси барьерного ограждения
+        #region Элементы оси шумозащитного экрана
         private string _barrierAxisElemIds;
         public string BarrierAxisElemIds
         {
@@ -84,7 +84,7 @@ namespace NoiseBarriers.ViewModels
         }
         #endregion
 
-        #region Выбранный типоразмер семейства панели
+        #region Выбранный типоразмер семейства секции
         private FamilySymbolSelector _panelFamilySymbol;
         public FamilySymbolSelector PanelFamilySymbol
         {
@@ -120,25 +120,25 @@ namespace NoiseBarriers.ViewModels
         }
         #endregion
 
-        #region Начало построения ограждения
-        private ObservableCollection<string> _alignmentSafityBarrier;
+        #region Начало построения шумозащитных экранов
+        private ObservableCollection<string> _alignmentNoiseBarrier;
         public ObservableCollection<string> AlignmentNoiseBarrier
         {
-            get => _alignmentSafityBarrier;
-            set => Set(ref _alignmentSafityBarrier, value);
+            get => _alignmentNoiseBarrier;
+            set => Set(ref _alignmentNoiseBarrier, value);
         }
         #endregion
 
-        #region Выбранное начало построения ограждения
-        private string _selectedAlignmentSafityBarrier;
+        #region Выбранное начало построения шумозащитного экрана
+        private string _selectedAlignmentNoiseBarrier;
         public string SelectedAlignmentNoiseBarrier
         {
-            get => _selectedAlignmentSafityBarrier;
-            set => Set(ref _selectedAlignmentSafityBarrier, value);
+            get => _selectedAlignmentNoiseBarrier;
+            set => Set(ref _selectedAlignmentNoiseBarrier, value);
         }
         #endregion
 
-        #region Начальная стойка ограждения
+        #region Начальная стойка шумозащитного экрана
         private bool _isIncludeStartPost = true;
         public bool IsIncludeStartPost
         {
@@ -147,49 +147,12 @@ namespace NoiseBarriers.ViewModels
         }
         #endregion
 
-        #region Конечная стойка ограждения
+        #region Конечная стойка шумозащитного экрана
         private bool _isIncludeFinishPost = true;
         public bool IsIncludeFinishPost
         {
             get => _isIncludeFinishPost;
             set => Set(ref _isIncludeFinishPost, value);
-        }
-        #endregion
-
-        #region Полотно ограждения
-        private ObservableCollection<FamilySymbolSelector> _beamFamilySymbols;
-        public ObservableCollection<FamilySymbolSelector> BeamFamilySymbols
-        {
-            get => _beamFamilySymbols;
-            set => Set(ref _beamFamilySymbols, value);
-        }
-        #endregion
-
-        #region Выбранное полотно ограждения
-        private FamilySymbolSelector _selectedBeamFamilySymbol;
-        public FamilySymbolSelector SelectedBeamFamilySymbol
-        {
-            get => _selectedBeamFamilySymbol;
-            set => Set(ref _selectedBeamFamilySymbol, value);
-        }
-        #endregion
-
-        #region Список полотен ограждения
-        private ObservableCollection<BeamSetup> _beamCollection;
-        public ObservableCollection<BeamSetup> BeamCollection
-        {
-            get => _beamCollection;
-            set => Set(ref _beamCollection, value);
-        }
-
-        #endregion
-
-        #region Выбранное полотно ограждения
-        private BeamSetup _selectedBeam;
-        public BeamSetup SelectedBeam
-        {
-            get => _selectedBeam;
-            set => Set(ref _selectedBeam, value);
         }
         #endregion
 
@@ -199,15 +162,6 @@ namespace NoiseBarriers.ViewModels
         {
             get => _postStep;
             set => Set(ref _postStep, value);
-        }
-        #endregion
-
-        #region Длина балок
-        private double _beamLength = 3.0;
-        public double BeamLength
-        {
-            get => _beamLength;
-            set => Set(ref _beamLength, value);
         }
         #endregion
 
@@ -264,45 +218,6 @@ namespace NoiseBarriers.ViewModels
         }
         #endregion
 
-        #region Добавление полотна ограждения в список
-        public ICommand AddBeamSetupCommand { get; }
-        
-        private void OnAddBeamSetupCommandExecuted(object parameter)
-        {
-            var newBeamSetup = new BeamSetup()
-            {
-                OffsetX = 0.3,
-                OffsetZ = 0.5
-            };
-
-            BeamCollection.Add(newBeamSetup);
-        }
-
-        private bool CanAddBeamSetupCommandExecute(object parameter)
-        {
-            return true;
-        }
-        #endregion
-
-        #region Удаление полотна ограждения из списка
-        public ICommand DeleteBeamSetupCommand { get; }
-
-        private void OnDeleteBeamSetupCommandExecuted(object parameter)
-        {
-            var lastBeamSetup = BeamCollection.LastOrDefault();
-
-            if(!(lastBeamSetup is null))
-            {
-                BeamCollection.Remove(lastBeamSetup);
-            }
-        }
-
-        private bool CanDeleteBeamSetupCommandExecute(object parameter)
-        {
-            return true;
-        }
-        #endregion
-
         #region Создание барьерного ограждения
         public ICommand CreateSafetyBarrierCommand { get; }
 
@@ -349,8 +264,6 @@ namespace NoiseBarriers.ViewModels
 
             GenericModelFamilySymbols = RevitModel.GetPostFamilySymbolNames();
 
-            BeamFamilySymbols = RevitModel.GetBeamFamilySymbolNames();
-
             AlignmentNoiseBarrier = new ObservableCollection<string>
             {
                 "Начало",
@@ -360,21 +273,12 @@ namespace NoiseBarriers.ViewModels
 
             SelectedAlignmentNoiseBarrier = "Начало";
 
-            BeamCollection = new ObservableCollection<BeamSetup>()
-            {
-                new BeamSetup() {OffsetX = 0.2, OffsetZ = 0.7}
-            };
-
             #region Команды
             GetBarrierAxisCommand = new LambdaCommand(OnGetBarrierAxisCommandExecuted, CanGetBarrierAxisCommandExecute);
 
             GetBoundCurve1Command = new LambdaCommand(OnGetBoundCurve1CommandExecuted, CanGetBoundCurve1CommandExecute);
 
             GetBoundCurve2Command = new LambdaCommand(OnGetBoundCurve2CommandExecuted, CanGetBoundCurve2CommandExecute);
-
-            AddBeamSetupCommand = new LambdaCommand(OnAddBeamSetupCommandExecuted, CanAddBeamSetupCommandExecute);
-
-            DeleteBeamSetupCommand = new LambdaCommand(OnDeleteBeamSetupCommandExecuted, CanDeleteBeamSetupCommandExecute);
 
             CreateSafetyBarrierCommand = new LambdaCommand(OnCreateSafetyBarrierCommandExecuted, CanCreateSafetyBarrierCommandExecute);
 
