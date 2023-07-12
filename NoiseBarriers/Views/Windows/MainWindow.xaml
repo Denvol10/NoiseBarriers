@@ -211,7 +211,7 @@
                                   IsChecked="{Binding IsRotatePostOn180}" />
                         <CheckBox Content="Развернуть панели"
                                   Style="{StaticResource CheckBoxStyle}" 
-                                  IsChecked="{Binding IsRotatePanelOn180}"/>
+                                  IsChecked="{Binding IsReversePanel}"/>
                     </UniformGrid>
                 </UniformGrid>
                 <UniformGrid Columns="2"

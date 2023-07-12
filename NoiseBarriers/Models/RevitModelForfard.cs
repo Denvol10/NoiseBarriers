@@ -174,7 +174,9 @@ namespace NoiseBarriers
         #endregion
 
         #region Создание шумозащитного экрана
-        public void CreateSafetyBarrier(FamilySymbolSelector postFamilyAndSymbolName, FamilySymbolSelector panelFamilyAndSymbolName)
+        public void CreateSafetyBarrier(FamilySymbolSelector postFamilyAndSymbolName,
+                                        FamilySymbolSelector panelFamilyAndSymbolName,
+                                        bool isReversePanel)
         {
             FamilySymbol postFSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, postFamilyAndSymbolName);
 
@@ -209,6 +211,11 @@ namespace NoiseBarriers
                         Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
 
                     panelFamilyInstance.Location.Rotate(Line.CreateUnbound(location.Point, XYZ.BasisZ), location.Rotation);
+
+                    if(isReversePanel)
+                    {
+                        panelFamilyInstance.flipFacing();
+                    }
                 }
 
                 trans.Commit();

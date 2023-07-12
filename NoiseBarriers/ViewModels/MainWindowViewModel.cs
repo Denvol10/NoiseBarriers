@@ -111,12 +111,12 @@ namespace NoiseBarriers.ViewModels
         }
         #endregion
 
-        #region Поворот панелей на 180 градусов
-        private bool _isRotatePanelOn180;
-        public bool IsRotatePanelOn180
+        #region Разворот панелей
+        private bool _isReversePanel;
+        public bool IsReversePanel
         {
-            get => _isRotatePanelOn180;
-            set => Set(ref _isRotatePanelOn180, value);
+            get => _isReversePanel;
+            set => Set(ref _isReversePanel, value);
         }
         #endregion
 
@@ -315,7 +315,7 @@ namespace NoiseBarriers.ViewModels
                                                  IsIncludeFinishPost,
                                                  PostStep,
                                                  LiftPanels);
-            RevitModel.CreateSafetyBarrier(PostFamilySymbol, PanelFamilySymbol);
+            RevitModel.CreateSafetyBarrier(PostFamilySymbol, PanelFamilySymbol, IsReversePanel);
             RevitCommand.mainView.Close();
         }
 
