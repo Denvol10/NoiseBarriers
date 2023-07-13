@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using NoiseBarriers.Infrastructure;
 using NoiseBarriers.Models;
+using NoiseBarriers.Properties;
 
 namespace NoiseBarriers.ViewModels
 {
@@ -25,6 +26,8 @@ namespace NoiseBarriers.ViewModels
             get => _revitModel;
             set => _revitModel = value;
         }
+
+        private int _postIndex = (int)Properties.Settings.Default["PostIndex"];
 
         #region Заголовок
 
@@ -94,7 +97,7 @@ namespace NoiseBarriers.ViewModels
         #endregion
 
         #region Приподнять панель экрана над землей
-        private double _liftPanels = 0.02;
+        private double _liftPanels = (double)Properties.Settings.Default["Lift"];
         public double LiftPanels
         {
             get => _liftPanels;
@@ -245,6 +248,7 @@ namespace NoiseBarriers.ViewModels
 
         private void OnCloseWindowCommandExecuted(object parameter)
         {
+            SaveSettings();
             RevitCommand.mainView.Close();
         }
 
@@ -256,6 +260,12 @@ namespace NoiseBarriers.ViewModels
 
         #endregion
 
+        private void SaveSettings()
+        {
+            Properties.Settings.Default["Lift"] = LiftPanels;
+            Properties.Settings.Default["PostIndex"] = GenericModelFamilySymbols.IndexOf(PostFamilySymbol);
+            Properties.Settings.Default.Save();
+        }
 
         #region Конструктор класса MainWindowViewModel
         public MainWindowViewModel(RevitModelForfard revitModel)
@@ -272,6 +282,11 @@ namespace NoiseBarriers.ViewModels
             };
 
             SelectedAlignmentNoiseBarrier = "Начало";
+
+            if(_postIndex >= 0 && _postIndex <= GenericModelFamilySymbols.Count - 1)
+            {
+                PostFamilySymbol = GenericModelFamilySymbols.ElementAt(_postIndex);
+            }
 
             #region Команды
             GetBarrierAxisCommand = new LambdaCommand(OnGetBarrierAxisCommandExecuted, CanGetBarrierAxisCommandExecute);

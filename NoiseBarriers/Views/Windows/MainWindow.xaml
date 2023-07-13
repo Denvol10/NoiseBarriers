@@ -97,7 +97,7 @@
                   Style="{StaticResource BorderGroupStyle}">
             <UniformGrid Columns="2">
                 <UniformGrid Rows="2">
-                    <TextBlock Text="Линии оси ограждения"
+                    <TextBlock Text="Линии оси экрана"
                                Style="{StaticResource TextAboveButton}" />
                     <Button Style="{StaticResource SelectButton}"
                             Command="{Binding GetBarrierAxisCommand}" />
