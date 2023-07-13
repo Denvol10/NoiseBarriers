@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:NoiseBarriers"
         mc:Ignorable="d"
         Title="{Binding Title}"
-        Height="500"
+        Height="494"
         Width="350"
         Background="#f0f0f0"
         WindowStartupLocation="CenterScreen"
@@ -198,7 +198,7 @@
             <StackPanel>
                 <UniformGrid Columns="2">
                     <UniformGrid Rows="2">
-                        <TextBlock Text="Выравнивание ограждения"
+                        <TextBlock Text="Выравнивание экрана"
                                    Style="{StaticResource TextAboveButton}" />
                         <ComboBox Style="{StaticResource ComboBoxStyle}"
                                   Margin="0,2,0,0"
