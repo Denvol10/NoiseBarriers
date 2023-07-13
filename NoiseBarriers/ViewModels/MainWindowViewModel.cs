@@ -234,6 +234,7 @@ namespace NoiseBarriers.ViewModels
                                                  PostStep,
                                                  LiftPanels);
             RevitModel.CreateSafetyBarrier(PostFamilySymbol, PanelFamilySymbol, IsReversePanel);
+            SaveSettings();
             RevitCommand.mainView.Close();
         }
 
