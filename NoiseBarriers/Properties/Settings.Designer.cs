@@ -46,5 +46,17 @@ namespace NoiseBarriers.Properties {
                 this["PostIndex"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ElementIdAxis {
+            get {
+                return ((string)(this["ElementIdAxis"]));
+            }
+            set {
+                this["ElementIdAxis"] = value;
+            }
+        }
     }
 }

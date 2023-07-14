@@ -265,6 +265,7 @@ namespace NoiseBarriers.ViewModels
         {
             Properties.Settings.Default["Lift"] = LiftPanels;
             Properties.Settings.Default["PostIndex"] = GenericModelFamilySymbols.IndexOf(PostFamilySymbol);
+            Properties.Settings.Default["ElementIdAxis"] = BarrierAxisElemIds;
             Properties.Settings.Default.Save();
         }
 
@@ -287,6 +288,14 @@ namespace NoiseBarriers.ViewModels
             if(_postIndex >= 0 && _postIndex <= GenericModelFamilySymbols.Count - 1)
             {
                 PostFamilySymbol = GenericModelFamilySymbols.ElementAt(_postIndex);
+            }
+
+            string axisElementIdInSettings = Properties.Settings.Default["ElementIdAxis"].ToString();
+
+            if (RevitModel.IsLinesExistInModel(axisElementIdInSettings))
+            {
+                BarrierAxisElemIds = Properties.Settings.Default["ElementIdAxis"].ToString();
+                RevitModel.GetAxisBySettings(axisElementIdInSettings);
             }
 
             #region Команды

@@ -49,6 +49,26 @@ namespace NoiseBarriers
         }
         #endregion
 
+        #region Проверка на то существуют линии в модели
+        public bool IsLinesExistInModel(string elemIdsInSettings)
+        {
+            var elemIds = RevitGeometryUtils.GetIdsByString(elemIdsInSettings);
+
+            return RevitGeometryUtils.IsElemsExistInModel(Doc, elemIds);
+        }
+
+
+        #endregion
+
+        #region Получение оси экрана из Settings
+        public void GetAxisBySettings(string elemIdsInSettings)
+        {
+            var elemIds = RevitGeometryUtils.GetIdsByString(elemIdsInSettings);
+            var lines = RevitGeometryUtils.GetLinesById(Doc, elemIds);
+            BarrierAxis = new ParametricPolyLine(lines);
+        }
+        #endregion
+
         #region Граница шумозащитного экрана 1
         public Curve BoundCurve1 { get; set; }
 

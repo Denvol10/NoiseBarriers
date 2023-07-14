@@ -36,6 +36,48 @@ namespace NoiseBarriers.Models
             return boundCurve;
         }
 
+        // Получение id элементов на основе списка в виде строки
+        public static List<int> GetIdsByString(string elems)
+        {
+            var elemIds = elems.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                         .Select(s => int.Parse(s.Remove(0, 2)))
+                         .ToList();
+
+            return elemIds;
+        }
+
+        // Проверка на то существуют ли элементы с данным Id в модели
+        public static bool IsElemsExistInModel(Document doc, IEnumerable<int> elems)
+        {
+            foreach(var elem in elems)
+            {
+                ElementId id = new ElementId(elem);
+                Element curElem = doc.GetElement(id);
+                if(curElem is null || !(curElem is DirectShape))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // Получение линий по их id
+        public static List<Line> GetLinesById(Document doc, IEnumerable<int> ids)
+        {
+            var directShapeLines = new List<DirectShape>();
+            foreach(var id in ids)
+            {
+                ElementId elemId = new ElementId(id);
+                DirectShape line = doc.GetElement(elemId) as DirectShape;
+                directShapeLines.Add(line);
+            }
+
+            var lines = GetCurvesByDirectShapes(directShapeLines).OfType<Line>().ToList();
+
+            return lines;
+        }
+
         // Метод получения строки с ElementId
         private static string ElementIdToString(IEnumerable<Element> elements)
         {
