@@ -49,15 +49,22 @@ namespace NoiseBarriers
         }
         #endregion
 
-        #region Проверка на то существуют линии в модели
-        public bool IsLinesExistInModel(string elemIdsInSettings)
+        #region Проверка на то существуют линии оси в модели
+        public bool IsAxisLinesExistInModel(string elemIdsInSettings)
         {
             var elemIds = RevitGeometryUtils.GetIdsByString(elemIdsInSettings);
 
-            return RevitGeometryUtils.IsElemsExistInModel(Doc, elemIds);
+            return RevitGeometryUtils.IsElemsExistInModel(Doc, elemIds, typeof(DirectShape));
         }
+        #endregion
 
+        #region Проверка на то существуют линия границы в модели
+        public bool IsBoundLineExistInModel(string elemIdsInSettings)
+        {
+            var elemIds = RevitGeometryUtils.GetIdsByString(elemIdsInSettings);
 
+            return RevitGeometryUtils.IsElemsExistInModel(Doc, elemIds, typeof(ModelLine));
+        }
         #endregion
 
         #region Получение оси экрана из Settings
@@ -66,6 +73,14 @@ namespace NoiseBarriers
             var elemIds = RevitGeometryUtils.GetIdsByString(elemIdsInSettings);
             var lines = RevitGeometryUtils.GetLinesById(Doc, elemIds);
             BarrierAxis = new ParametricPolyLine(lines);
+        }
+        #endregion
+
+        #region Получение границы 1 из Settings
+        public void GetBound1BySettings(string elemIdsInSettings)
+        {
+            var elemIds = RevitGeometryUtils.GetIdsByString(elemIdsInSettings);
+
         }
         #endregion
 

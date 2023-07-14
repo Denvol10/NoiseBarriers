@@ -47,13 +47,13 @@ namespace NoiseBarriers.Models
         }
 
         // Проверка на то существуют ли элементы с данным Id в модели
-        public static bool IsElemsExistInModel(Document doc, IEnumerable<int> elems)
+        public static bool IsElemsExistInModel(Document doc, IEnumerable<int> elems, Type type)
         {
             foreach(var elem in elems)
             {
                 ElementId id = new ElementId(elem);
                 Element curElem = doc.GetElement(id);
-                if(curElem is null || !(curElem is DirectShape))
+                if(curElem is null || !(curElem.GetType() == type))
                 {
                     return false;
                 }

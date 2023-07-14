@@ -266,6 +266,7 @@ namespace NoiseBarriers.ViewModels
             Properties.Settings.Default["Lift"] = LiftPanels;
             Properties.Settings.Default["PostIndex"] = GenericModelFamilySymbols.IndexOf(PostFamilySymbol);
             Properties.Settings.Default["ElementIdAxis"] = BarrierAxisElemIds;
+            Properties.Settings.Default["ElementIdBound1"] = BoundCurve1;
             Properties.Settings.Default.Save();
         }
 
@@ -290,13 +291,23 @@ namespace NoiseBarriers.ViewModels
                 PostFamilySymbol = GenericModelFamilySymbols.ElementAt(_postIndex);
             }
 
+            #region Присваивание значения элементам оси из Settings
             string axisElementIdInSettings = Properties.Settings.Default["ElementIdAxis"].ToString();
-
-            if (RevitModel.IsLinesExistInModel(axisElementIdInSettings) && !string.IsNullOrEmpty(axisElementIdInSettings))
+            if (RevitModel.IsAxisLinesExistInModel(axisElementIdInSettings) && !string.IsNullOrEmpty(axisElementIdInSettings))
             {
-                BarrierAxisElemIds = Properties.Settings.Default["ElementIdAxis"].ToString();
+                BarrierAxisElemIds = axisElementIdInSettings;
                 RevitModel.GetAxisBySettings(axisElementIdInSettings);
             }
+            #endregion
+
+            // TODO Добавить сохранение границы 1
+            #region Присваивание значения элементу граница 1 из Settings
+            string bound1ElementIdSettings = Properties.Settings.Default["ElementIdBound1"].ToString();
+            if (RevitModel.IsBoundLineExistInModel(bound1ElementIdSettings) && !string.IsNullOrEmpty(bound1ElementIdSettings))
+            {
+                BoundCurve1 = bound1ElementIdSettings;
+            }
+            #endregion
 
             #region Команды
             GetBarrierAxisCommand = new LambdaCommand(OnGetBarrierAxisCommandExecuted, CanGetBarrierAxisCommandExecute);
