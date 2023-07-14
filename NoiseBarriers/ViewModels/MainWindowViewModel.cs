@@ -292,7 +292,7 @@ namespace NoiseBarriers.ViewModels
 
             string axisElementIdInSettings = Properties.Settings.Default["ElementIdAxis"].ToString();
 
-            if (RevitModel.IsLinesExistInModel(axisElementIdInSettings))
+            if (RevitModel.IsLinesExistInModel(axisElementIdInSettings) && !string.IsNullOrEmpty(axisElementIdInSettings))
             {
                 BarrierAxisElemIds = Properties.Settings.Default["ElementIdAxis"].ToString();
                 RevitModel.GetAxisBySettings(axisElementIdInSettings);
