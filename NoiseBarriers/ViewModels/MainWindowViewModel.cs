@@ -29,6 +29,8 @@ namespace NoiseBarriers.ViewModels
 
         private int _postIndex = (int)Properties.Settings.Default["PostIndex"];
 
+        private int _panelIndex = (int)Properties.Settings.Default["PanelIndex"];
+
         #region Заголовок
 
         private string _title = "Шумозащитные экраны";
@@ -268,6 +270,7 @@ namespace NoiseBarriers.ViewModels
             Properties.Settings.Default["IsIncludeStartPost"] = IsIncludeStartPost;
             Properties.Settings.Default["IsIncludeFinishPost"] = IsIncludeFinishPost;
             Properties.Settings.Default["PostIndex"] = GenericModelFamilySymbols.IndexOf(PostFamilySymbol);
+            Properties.Settings.Default["PanelIndex"] = GenericModelFamilySymbols.IndexOf(PanelFamilySymbol);
             Properties.Settings.Default["ElementIdAxis"] = BarrierAxisElemIds;
             Properties.Settings.Default["ElementIdBound1"] = BoundCurve1;
             Properties.Settings.Default["ElementIdBound2"] = BoundCurve2;
@@ -290,10 +293,19 @@ namespace NoiseBarriers.ViewModels
 
             SelectedAlignmentNoiseBarrier = "Начало";
 
-            if(_postIndex >= 0 && _postIndex <= GenericModelFamilySymbols.Count - 1)
+            #region Инициализация начального значения выбора типоразмера стойки
+            if (_postIndex >= 0 && _postIndex <= GenericModelFamilySymbols.Count - 1)
             {
                 PostFamilySymbol = GenericModelFamilySymbols.ElementAt(_postIndex);
             }
+            #endregion
+
+            #region Инициализация начального значения выбора типоразмера секции
+            if(_panelIndex >= 0 && _panelIndex <= GenericModelFamilySymbols.Count - 1)
+            {
+                PanelFamilySymbol = GenericModelFamilySymbols.ElementAt(_panelIndex);
+            }
+            #endregion
 
             #region Присваивание значения элементам оси из Settings
             string axisElementIdInSettings = Properties.Settings.Default["ElementIdAxis"].ToString();

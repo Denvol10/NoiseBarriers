@@ -118,5 +118,17 @@ namespace NoiseBarriers.Properties {
                 this["IsIncludeFinishPost"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int PanelIndex {
+            get {
+                return ((int)(this["PanelIndex"]));
+            }
+            set {
+                this["PanelIndex"] = value;
+            }
+        }
     }
 }
