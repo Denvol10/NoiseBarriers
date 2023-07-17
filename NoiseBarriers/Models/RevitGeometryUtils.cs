@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace NoiseBarriers.Models
 {
@@ -76,6 +77,18 @@ namespace NoiseBarriers.Models
             var lines = GetCurvesByDirectShapes(directShapeLines).OfType<Line>().ToList();
 
             return lines;
+        }
+
+        // Получение линии по Id
+        public static Curve GetBoundCurveById(Document doc ,string elemIdInSettings)
+        {
+            var elemId = GetIdsByString(elemIdInSettings).First();
+            ElementId modelLineId = new ElementId(elemId);
+            Element modelLine = doc.GetElement(modelLineId);
+            Options options = new Options();
+            Curve line = modelLine.get_Geometry(options).First() as Curve;
+
+            return line;
         }
 
         // Метод получения строки с ElementId

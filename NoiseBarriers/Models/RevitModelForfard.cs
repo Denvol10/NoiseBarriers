@@ -79,11 +79,14 @@ namespace NoiseBarriers
         #region Получение границы 1 из Settings
         public void GetBound1BySettings(string elemIdInSettings)
         {
-            var elemId = RevitGeometryUtils.GetIdsByString(elemIdInSettings).First();
-            ElementId modelLineId = new ElementId(elemId);
-            Element modelLine = Doc.GetElement(modelLineId);
-            Options options = new Options();
-            BoundCurve1 = modelLine.get_Geometry(options).First() as Curve;
+            BoundCurve1 = RevitGeometryUtils.GetBoundCurveById(Doc, elemIdInSettings);
+        }
+        #endregion
+
+        #region Получение границы 2 из Settings
+        public void GetBound2BySettings(string elemIdInSettings)
+        {
+            BoundCurve2 = RevitGeometryUtils.GetBoundCurveById(Doc, elemIdInSettings);
         }
         #endregion
 

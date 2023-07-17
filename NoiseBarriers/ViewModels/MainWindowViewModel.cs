@@ -301,7 +301,6 @@ namespace NoiseBarriers.ViewModels
             }
             #endregion
 
-            // TODO Добавить сохранение границы 1
             #region Присваивание значения элементу граница 1 из Settings
             string bound1ElementIdSettings = Properties.Settings.Default["ElementIdBound1"].ToString();
             if (RevitModel.IsBoundLineExistInModel(bound1ElementIdSettings) && !string.IsNullOrEmpty(bound1ElementIdSettings))
@@ -311,10 +310,13 @@ namespace NoiseBarriers.ViewModels
             }
             #endregion
 
-            
             #region Присваивание значения элементу граница 2 из Settings
             string bound2ElementIdSettings = Properties.Settings.Default["ElementIdBound2"].ToString();
-
+            if(RevitModel.IsBoundLineExistInModel(bound2ElementIdSettings) && !string.IsNullOrEmpty(bound2ElementIdSettings))
+            {
+                BoundCurve2 = bound2ElementIdSettings;
+                RevitModel.GetBound2BySettings(bound2ElementIdSettings);
+            }
             #endregion
 
             #region Команды
