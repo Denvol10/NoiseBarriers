@@ -267,6 +267,7 @@ namespace NoiseBarriers.ViewModels
             Properties.Settings.Default["PostIndex"] = GenericModelFamilySymbols.IndexOf(PostFamilySymbol);
             Properties.Settings.Default["ElementIdAxis"] = BarrierAxisElemIds;
             Properties.Settings.Default["ElementIdBound1"] = BoundCurve1;
+            Properties.Settings.Default["ElementIdBound2"] = BoundCurve2;
             Properties.Settings.Default.Save();
         }
 
@@ -306,7 +307,14 @@ namespace NoiseBarriers.ViewModels
             if (RevitModel.IsBoundLineExistInModel(bound1ElementIdSettings) && !string.IsNullOrEmpty(bound1ElementIdSettings))
             {
                 BoundCurve1 = bound1ElementIdSettings;
+                RevitModel.GetBound1BySettings(bound1ElementIdSettings);
             }
+            #endregion
+
+            
+            #region Присваивание значения элементу граница 2 из Settings
+            string bound2ElementIdSettings = Properties.Settings.Default["ElementIdBound2"].ToString();
+
             #endregion
 
             #region Команды

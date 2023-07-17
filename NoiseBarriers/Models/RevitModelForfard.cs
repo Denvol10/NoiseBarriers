@@ -77,10 +77,13 @@ namespace NoiseBarriers
         #endregion
 
         #region Получение границы 1 из Settings
-        public void GetBound1BySettings(string elemIdsInSettings)
+        public void GetBound1BySettings(string elemIdInSettings)
         {
-            var elemIds = RevitGeometryUtils.GetIdsByString(elemIdsInSettings);
-
+            var elemId = RevitGeometryUtils.GetIdsByString(elemIdInSettings).First();
+            ElementId modelLineId = new ElementId(elemId);
+            Element modelLine = Doc.GetElement(modelLineId);
+            Options options = new Options();
+            BoundCurve1 = modelLine.get_Geometry(options).First() as Curve;
         }
         #endregion
 

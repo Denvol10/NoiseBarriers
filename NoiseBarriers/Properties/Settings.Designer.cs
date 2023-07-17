@@ -70,5 +70,17 @@ namespace NoiseBarriers.Properties {
                 this["ElementIdBound1"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ElementIdBound2 {
+            get {
+                return ((string)(this["ElementIdBound2"]));
+            }
+            set {
+                this["ElementIdBound2"] = value;
+            }
+        }
     }
 }
