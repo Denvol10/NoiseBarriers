@@ -142,5 +142,17 @@ namespace NoiseBarriers.Properties {
                 this["SelectedAlignment"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsRotatePostOn180 {
+            get {
+                return ((bool)(this["IsRotatePostOn180"]));
+            }
+            set {
+                this["IsRotatePostOn180"] = value;
+            }
+        }
     }
 }

@@ -108,7 +108,7 @@ namespace NoiseBarriers.ViewModels
         #endregion
 
         #region Поворот стоек на 180 градусов
-        private bool _isRotatePostOn180;
+        private bool _isRotatePostOn180 = (bool)Properties.Settings.Default["IsRotatePostOn180"];
         public bool IsRotatePostOn180
         {
             get => _isRotatePostOn180;
@@ -275,6 +275,7 @@ namespace NoiseBarriers.ViewModels
             Properties.Settings.Default["ElementIdBound1"] = BoundCurve1;
             Properties.Settings.Default["ElementIdBound2"] = BoundCurve2;
             Properties.Settings.Default["SelectedAlignment"] = SelectedAlignmentNoiseBarrier;
+            Properties.Settings.Default["IsRotatePostOn180"] = IsRotatePostOn180;
             Properties.Settings.Default.Save();
         }
 
@@ -332,8 +333,6 @@ namespace NoiseBarriers.ViewModels
                 RevitModel.GetBound2BySettings(bound2ElementIdSettings);
             }
             #endregion
-
-
 
             #region Команды
             GetBarrierAxisCommand = new LambdaCommand(OnGetBarrierAxisCommandExecuted, CanGetBarrierAxisCommandExecute);
