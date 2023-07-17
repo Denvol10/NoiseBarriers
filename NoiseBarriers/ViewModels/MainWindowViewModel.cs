@@ -142,7 +142,7 @@ namespace NoiseBarriers.ViewModels
         #endregion
 
         #region Начальная стойка шумозащитного экрана
-        private bool _isIncludeStartPost = true;
+        private bool _isIncludeStartPost = (bool)Properties.Settings.Default["IsIncludeStartPost"];
         public bool IsIncludeStartPost
         {
             get => _isIncludeStartPost;
@@ -265,6 +265,7 @@ namespace NoiseBarriers.ViewModels
         {
             Properties.Settings.Default["Lift"] = LiftPanels;
             Properties.Settings.Default["PostStep"] = PostStep;
+            Properties.Settings.Default["IsIncludeStartPost"] = IsIncludeStartPost;
             Properties.Settings.Default["PostIndex"] = GenericModelFamilySymbols.IndexOf(PostFamilySymbol);
             Properties.Settings.Default["ElementIdAxis"] = BarrierAxisElemIds;
             Properties.Settings.Default["ElementIdBound1"] = BoundCurve1;
