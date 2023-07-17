@@ -154,5 +154,17 @@ namespace NoiseBarriers.Properties {
                 this["IsRotatePostOn180"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsReversePanel {
+            get {
+                return ((bool)(this["IsReversePanel"]));
+            }
+            set {
+                this["IsReversePanel"] = value;
+            }
+        }
     }
 }

@@ -117,7 +117,7 @@ namespace NoiseBarriers.ViewModels
         #endregion
 
         #region Разворот панелей
-        private bool _isReversePanel;
+        private bool _isReversePanel = (bool)Properties.Settings.Default["IsReversePanel"];
         public bool IsReversePanel
         {
             get => _isReversePanel;
@@ -276,6 +276,7 @@ namespace NoiseBarriers.ViewModels
             Properties.Settings.Default["ElementIdBound2"] = BoundCurve2;
             Properties.Settings.Default["SelectedAlignment"] = SelectedAlignmentNoiseBarrier;
             Properties.Settings.Default["IsRotatePostOn180"] = IsRotatePostOn180;
+            Properties.Settings.Default["IsReversePanel"] = IsReversePanel;
             Properties.Settings.Default.Save();
         }
 
