@@ -151,7 +151,7 @@ namespace NoiseBarriers.ViewModels
         #endregion
 
         #region Конечная стойка шумозащитного экрана
-        private bool _isIncludeFinishPost = true;
+        private bool _isIncludeFinishPost = (bool)Properties.Settings.Default["IsIncludeFinishPost"];
         public bool IsIncludeFinishPost
         {
             get => _isIncludeFinishPost;
@@ -266,6 +266,7 @@ namespace NoiseBarriers.ViewModels
             Properties.Settings.Default["Lift"] = LiftPanels;
             Properties.Settings.Default["PostStep"] = PostStep;
             Properties.Settings.Default["IsIncludeStartPost"] = IsIncludeStartPost;
+            Properties.Settings.Default["IsIncludeFinishPost"] = IsIncludeFinishPost;
             Properties.Settings.Default["PostIndex"] = GenericModelFamilySymbols.IndexOf(PostFamilySymbol);
             Properties.Settings.Default["ElementIdAxis"] = BarrierAxisElemIds;
             Properties.Settings.Default["ElementIdBound1"] = BoundCurve1;

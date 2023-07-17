@@ -106,5 +106,17 @@ namespace NoiseBarriers.Properties {
                 this["IsIncludeStartPost"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsIncludeFinishPost {
+            get {
+                return ((bool)(this["IsIncludeFinishPost"]));
+            }
+            set {
+                this["IsIncludeFinishPost"] = value;
+            }
+        }
     }
 }
