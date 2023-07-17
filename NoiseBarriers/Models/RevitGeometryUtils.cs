@@ -40,6 +40,11 @@ namespace NoiseBarriers.Models
         // Получение id элементов на основе списка в виде строки
         public static List<int> GetIdsByString(string elems)
         {
+            if(string.IsNullOrEmpty(elems))
+            {
+                return null;
+            }
+
             var elemIds = elems.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)
                          .Select(s => int.Parse(s.Remove(0, 2)))
                          .ToList();
@@ -50,6 +55,11 @@ namespace NoiseBarriers.Models
         // Проверка на то существуют ли элементы с данным Id в модели
         public static bool IsElemsExistInModel(Document doc, IEnumerable<int> elems, Type type)
         {
+            if(elems is null)
+            {
+                return false;
+            }
+
             foreach(var elem in elems)
             {
                 ElementId id = new ElementId(elem);

@@ -309,29 +309,38 @@ namespace NoiseBarriers.ViewModels
             #endregion
 
             #region Присваивание значения элементам оси из Settings
-            string axisElementIdInSettings = Properties.Settings.Default["ElementIdAxis"].ToString();
-            if (RevitModel.IsAxisLinesExistInModel(axisElementIdInSettings) && !string.IsNullOrEmpty(axisElementIdInSettings))
+            if(!(Properties.Settings.Default["ElementIdAxis"] is null))
             {
-                BarrierAxisElemIds = axisElementIdInSettings;
-                RevitModel.GetAxisBySettings(axisElementIdInSettings);
+                string axisElementIdInSettings = Properties.Settings.Default["ElementIdAxis"].ToString();
+                if (RevitModel.IsAxisLinesExistInModel(axisElementIdInSettings) && !string.IsNullOrEmpty(axisElementIdInSettings))
+                {
+                    BarrierAxisElemIds = axisElementIdInSettings;
+                    RevitModel.GetAxisBySettings(axisElementIdInSettings);
+                }
             }
             #endregion
 
             #region Присваивание значения элементу граница 1 из Settings
-            string bound1ElementIdSettings = Properties.Settings.Default["ElementIdBound1"].ToString();
-            if (RevitModel.IsBoundLineExistInModel(bound1ElementIdSettings) && !string.IsNullOrEmpty(bound1ElementIdSettings))
+            if(!(Properties.Settings.Default["ElementIdBound1"] is null))
             {
-                BoundCurve1 = bound1ElementIdSettings;
-                RevitModel.GetBound1BySettings(bound1ElementIdSettings);
+                string bound1ElementIdSettings = Properties.Settings.Default["ElementIdBound1"].ToString();
+                if (RevitModel.IsBoundLineExistInModel(bound1ElementIdSettings) && !string.IsNullOrEmpty(bound1ElementIdSettings))
+                {
+                    BoundCurve1 = bound1ElementIdSettings;
+                    RevitModel.GetBound1BySettings(bound1ElementIdSettings);
+                }
             }
             #endregion
 
             #region Присваивание значения элементу граница 2 из Settings
-            string bound2ElementIdSettings = Properties.Settings.Default["ElementIdBound2"].ToString();
-            if(RevitModel.IsBoundLineExistInModel(bound2ElementIdSettings) && !string.IsNullOrEmpty(bound2ElementIdSettings))
+            if(!(Properties.Settings.Default["ElementIdBound2"] is null))
             {
-                BoundCurve2 = bound2ElementIdSettings;
-                RevitModel.GetBound2BySettings(bound2ElementIdSettings);
+                string bound2ElementIdSettings = Properties.Settings.Default["ElementIdBound2"].ToString();
+                if (RevitModel.IsBoundLineExistInModel(bound2ElementIdSettings) && !string.IsNullOrEmpty(bound2ElementIdSettings))
+                {
+                    BoundCurve2 = bound2ElementIdSettings;
+                    RevitModel.GetBound2BySettings(bound2ElementIdSettings);
+                }
             }
             #endregion
 
