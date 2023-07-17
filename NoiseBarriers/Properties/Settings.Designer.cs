@@ -130,5 +130,17 @@ namespace NoiseBarriers.Properties {
                 this["PanelIndex"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\"Начало\"")]
+        public string SelectedAlignment {
+            get {
+                return ((string)(this["SelectedAlignment"]));
+            }
+            set {
+                this["SelectedAlignment"] = value;
+            }
+        }
     }
 }

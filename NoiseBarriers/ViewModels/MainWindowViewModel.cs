@@ -135,7 +135,7 @@ namespace NoiseBarriers.ViewModels
         #endregion
 
         #region Выбранное начало построения шумозащитного экрана
-        private string _selectedAlignmentNoiseBarrier;
+        private string _selectedAlignmentNoiseBarrier = (string)Properties.Settings.Default["SelectedAlignment"];
         public string SelectedAlignmentNoiseBarrier
         {
             get => _selectedAlignmentNoiseBarrier;
@@ -274,6 +274,7 @@ namespace NoiseBarriers.ViewModels
             Properties.Settings.Default["ElementIdAxis"] = BarrierAxisElemIds;
             Properties.Settings.Default["ElementIdBound1"] = BoundCurve1;
             Properties.Settings.Default["ElementIdBound2"] = BoundCurve2;
+            Properties.Settings.Default["SelectedAlignment"] = SelectedAlignmentNoiseBarrier;
             Properties.Settings.Default.Save();
         }
 
@@ -290,8 +291,6 @@ namespace NoiseBarriers.ViewModels
                 "Конец",
                 "Середина"
             };
-
-            SelectedAlignmentNoiseBarrier = "Начало";
 
             #region Инициализация начального значения выбора типоразмера стойки
             if (_postIndex >= 0 && _postIndex <= GenericModelFamilySymbols.Count - 1)

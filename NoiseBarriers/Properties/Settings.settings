@@ -29,5 +29,8 @@
     <Setting Name="PanelIndex" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="SelectedAlignment" Type="System.String" Scope="User">
+      <Value Profile="(Default)">"Начало"</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
