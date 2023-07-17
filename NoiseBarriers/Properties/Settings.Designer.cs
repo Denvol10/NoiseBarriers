@@ -82,5 +82,17 @@ namespace NoiseBarriers.Properties {
                 this["ElementIdBound2"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public double PostStep {
+            get {
+                return ((double)(this["PostStep"]));
+            }
+            set {
+                this["PostStep"] = value;
+            }
+        }
     }
 }

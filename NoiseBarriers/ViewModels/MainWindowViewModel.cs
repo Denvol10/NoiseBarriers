@@ -160,7 +160,7 @@ namespace NoiseBarriers.ViewModels
         #endregion
 
         #region Шаг стоек
-        private double _postStep = 3.0;
+        private double _postStep = (double)Properties.Settings.Default["PostStep"];
         public double PostStep
         {
             get => _postStep;
@@ -264,6 +264,7 @@ namespace NoiseBarriers.ViewModels
         private void SaveSettings()
         {
             Properties.Settings.Default["Lift"] = LiftPanels;
+            Properties.Settings.Default["PostStep"] = PostStep;
             Properties.Settings.Default["PostIndex"] = GenericModelFamilySymbols.IndexOf(PostFamilySymbol);
             Properties.Settings.Default["ElementIdAxis"] = BarrierAxisElemIds;
             Properties.Settings.Default["ElementIdBound1"] = BoundCurve1;
@@ -318,6 +319,8 @@ namespace NoiseBarriers.ViewModels
                 RevitModel.GetBound2BySettings(bound2ElementIdSettings);
             }
             #endregion
+
+
 
             #region Команды
             GetBarrierAxisCommand = new LambdaCommand(OnGetBarrierAxisCommandExecuted, CanGetBarrierAxisCommandExecute);
