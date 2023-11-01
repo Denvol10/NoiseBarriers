@@ -218,7 +218,13 @@ namespace NoiseBarriers
 
             FamilySymbol panelFSymbol = RevitFamilyUtils.GetFamilySymbolByName(Doc, panelFamilyAndSymbolName);
 
-            var level = new FilteredElementCollector(Doc).OfCategory(BuiltInCategory.OST_Levels).Where(e => e.Name == "Уровень 1").First() as Level;
+            var level = new FilteredElementCollector(Doc).OfClass(typeof(Level))
+                                                         .FirstOrDefault(l => l.Name == "Уровень 1") as Level;
+
+            if (level is null)
+            {
+                level = new FilteredElementCollector(Doc).OfClass(typeof(Level)).First() as Level;
+            }
 
             using (Transaction trans = new Transaction(Doc, "Created Noise Barrier"))
             {
